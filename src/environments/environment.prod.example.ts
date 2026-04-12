@@ -6,6 +6,7 @@ export const environment = {
     key: 'YOUR_SUPABASE_ANON_KEY'
   },
   claude: {
-    apiKey: 'YOUR_CLAUDE_API_KEY' // Get from https://console.anthropic.com/
+    apiKey: 'YOUR_CLAUDE_API_KEY',
+    // Get from https://console.anthropic.com/
   }
 };

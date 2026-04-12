@@ -1,6 +1,13 @@
 [build]
   command = "npm run build"
   publish = "dist/portfolioiq-angular"
+  functions = "netlify/functions"
+
+[[redirects]]
+  from = "/api/claude"
+  to = "/.netlify/functions/claude"
+  status = 200
+  force = true
 
 [[redirects]]
   from = "/*"

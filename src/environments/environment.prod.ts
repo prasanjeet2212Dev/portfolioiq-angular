@@ -11,7 +11,7 @@ export const environment = {
     key: 'sb_publishable_dZXEzlt_Ztwsa6hARg-Lzg_iyeGbbYi'
   },
   claude: {
-    apiKey: '' // Leave empty - users will add via Settings page
+    apiKey: '' // Leave empty; Netlify function will use a server-side secret.
   }
 };
 

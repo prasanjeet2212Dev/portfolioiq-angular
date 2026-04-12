@@ -12,7 +12,7 @@
     <div class="settings-panel">
       <label>Anthropic API Key</label>
       <input type="password" [(ngModel)]="apiKey" placeholder="sk-...">
-      <div class="settings-hint">Your key is stored locally in your browser — never sent anywhere except to Anthropic.</div>
+      <div class="settings-hint">Your key is stored locally in your browser for development. In production, the Netlify backend should use the server secret instead.</div>
       <button class="btn btn-gold" (click)="setAPIKey()">Save Key</button>
     </div>
   </div>
