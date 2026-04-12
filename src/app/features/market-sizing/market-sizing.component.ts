@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { SupabaseService } from '../../services/supabase.service';
+import { Startup } from '../../models';
 
 @Component({
   selector: 'app-market-sizing',
@@ -6,6 +8,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./market-sizing.component.css']
 })
 export class MarketSizingComponent implements OnInit {
+  startups: Startup[] = [];
+  selectedStartup: Startup | null = null;
+  isSuperAdmin = false;
+  
   linkToStartup = 'standalone';
   customerType = 'b2c';
   geography = 'pan-india';
@@ -22,9 +28,37 @@ export class MarketSizingComponent implements OnInit {
 
   result: any = null;
 
-  constructor() {}
+  constructor(private supabase: SupabaseService) {}
 
-  ngOnInit() {
+  async ngOnInit() {
+    // Check if super admin
+    this.isSuperAdmin = await this.supabase.getSuperAdminStatus();
+    console.log('Market Sizing - Is Super Admin:', this.isSuperAdmin);
+
+    if (this.isSuperAdmin) {
+      // Super admin: fetch all startups across institutions
+      this.startups = await this.supabase.getAllStartupsAcrossInstitutions();
+      console.log('Market Sizing - Loaded startups for super admin:', this.startups.length);
+    } else {
+      // Regular institution: subscribe to their startups
+      this.supabase.getStartups().subscribe(startups => {
+        this.startups = startups;
+        console.log('Market Sizing - Loaded startups for institution:', this.startups.length);
+      });
+    }
+  }
+
+  onStartupSelected(event: any) {
+    const startupId = parseInt(event.target.value);
+    if (startupId && this.startups.length > 0) {
+      this.selectedStartup = this.startups.find(s => s.id === startupId) || null;
+      if (this.selectedStartup) {
+        // Pre-fill form with startup data if available
+        console.log('Selected startup:', this.selectedStartup);
+      }
+    } else {
+      this.selectedStartup = null;
+    }
   }
 
   calculate() {

@@ -235,3 +235,71 @@
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 768px) {
+  .valuation-page {
+    padding: 0;
+  }
+
+  .tool-form {
+    padding: 16px;
+  }
+
+  .tool-header h2 {
+    font-size: 18px;
+  }
+
+  .tool-description {
+    font-size: 12px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .section-header {
+    font-size: 15px;
+  }
+
+  .btn-estimate {
+    font-size: 13px;
+    padding: 10px 20px;
+  }
+
+  .result-box {
+    padding: 16px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tool-form {
+    padding: 12px;
+  }
+
+  .tool-header h2 {
+    font-size: 16px;
+  }
+
+  .form-section {
+    padding: 12px;
+  }
+
+  .form-field label {
+    font-size: 12px;
+  }
+
+  .form-select,
+  input[type="text"] {
+    font-size: 13px;
+  }
+
+  .btn-estimate {
+    width: 100%;
+  }
+
+  .result-box {
+    font-size: 12px;
+  }
+}

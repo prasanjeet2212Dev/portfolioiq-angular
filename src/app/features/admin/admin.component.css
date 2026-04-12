@@ -222,3 +222,91 @@
   padding: 60px 20px;
   color: #999;
 }
+
+/* Mobile Responsive */
+@media (max-width: 1024px) {
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .institutions-table,
+  .startups-table {
+    min-width: 600px;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-page {
+    max-width: 100%;
+  }
+
+  .page-title {
+    font-size: 20px;
+  }
+
+  .kpi-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .kpi-card {
+    padding: 16px;
+  }
+
+  .kpi-value {
+    font-size: 24px;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .section-header h2 {
+    font-size: 16px;
+  }
+
+  .institutions-table th,
+  .startups-table th,
+  .institutions-table td,
+  .startups-table td {
+    padding: 12px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-header {
+    margin-bottom: 16px;
+  }
+
+  .kpi-card {
+    padding: 12px;
+  }
+
+  .kpi-value {
+    font-size: 20px;
+  }
+
+  .table-section {
+    border-radius: 4px;
+  }
+
+  .btn-action {
+    padding: 4px 8px;
+    font-size: 11px;
+    margin-right: 4px;
+  }
+
+  .institutions-table,
+  .startups-table {
+    min-width: 500px;
+  }
+}
