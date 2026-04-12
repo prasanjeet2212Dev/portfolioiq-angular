@@ -1,0 +1,151 @@
+<div class="startup-detail" *ngIf="startup">
+  <div class="header">
+    <button class="btn-back" (click)="goBack()">← Back</button>
+    <h1>{{ startup.data.name }}</h1>
+    <div class="header-actions">
+      <button class="btn btn-secondary" (click)="showSettings = !showSettings">⚙ AI Settings</button>
+      <button class="btn btn-danger" (click)="deleteStartup()">🗑 Delete</button>
+    </div>
+  </div>
+
+  <div class="ai-settings" *ngIf="showSettings">
+    <div class="settings-panel">
+      <label>Anthropic API Key</label>
+      <input type="password" [(ngModel)]="apiKey" placeholder="sk-...">
+      <div class="settings-hint">Your key is stored locally in your browser — never sent anywhere except to Anthropic.</div>
+      <button class="btn btn-gold" (click)="setAPIKey()">Save Key</button>
+    </div>
+  </div>
+
+  <div class="layout">
+    <!-- Left: Core Info -->
+    <div class="left-panel">
+      <div class="card">
+        <h2>Core Info</h2>
+        <div class="info-grid">
+          <div class="info-item">
+            <label>Sector</label>
+            <strong>{{ startup.data.sector }}</strong>
+          </div>
+          <div class="info-item">
+            <label>Stage</label>
+            <strong>{{ startup.data.stage }}</strong>
+          </div>
+          <div class="info-item">
+            <label>City</label>
+            <strong>{{ startup.data.city }}</strong>
+          </div>
+          <div class="info-item">
+            <label>Team Size</label>
+            <strong>{{ startup.data.team_size }}</strong>
+          </div>
+          <div class="info-item" *ngIf="startup.data.revenue">
+            <label>Revenue</label>
+            <strong>₹{{ (startup.data.revenue / 1000000).toFixed(1) }}M</strong>
+          </div>
+          <div class="info-item" *ngIf="startup.data.runway">
+            <label>Runway</label>
+            <strong>{{ startup.data.runway }} months</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Investment Readiness Score</h2>
+        <div class="score-large" [ngClass]="getScoreColor(scores.ir_score)">
+          {{ scores.ir_score }}
+        </div>
+        <div class="score-breakdown">
+          <div class="breakdown-item">
+            <span>Revenue Impact</span>
+            <div class="bar">
+              <div class="fill" [style.width.%]="(startup.data.revenue ? Math.min(startup.data.revenue / 100000, 100) : 0)"></div>
+            </div>
+          </div>
+          <div class="breakdown-item">
+            <span>Growth Rate</span>
+            <div class="bar">
+              <div class="fill" [style.width.%]="(startup.data.growth_rate ? startup.data.growth_rate * 1000 : 0)"></div>
+            </div>
+          </div>
+          <div class="breakdown-item">
+            <span>Team Size</span>
+            <div class="bar">
+              <div class="fill" [style.width.%]="(startup.data.team_size ? Math.min(startup.data.team_size * 5, 100) : 0)"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: AI Insights -->
+    <div class="right-panel">
+      <div class="card ai-card">
+        <div class="ai-tabs">
+          <button
+            class="tab-btn"
+            [class.active]="aiTab === 'analysis'"
+            (click)="aiTab = 'analysis'; generateAnalysis()">
+            📊 Analysis
+          </button>
+          <button
+            class="tab-btn"
+            [class.active]="aiTab === 'market'"
+            (click)="aiTab = 'market'; generateMarketIntel()">
+            📈 Market Intel
+          </button>
+          <button
+            class="tab-btn"
+            [class.active]="aiTab === 'action'"
+            (click)="aiTab = 'action'; generateActionPlan()">
+            🎯 Action Plan
+          </button>
+          <button
+            class="tab-btn"
+            [class.active]="aiTab === 'valuation'"
+            (click)="aiTab = 'valuation'; generateValuation()">
+            💰 Valuation
+          </button>
+          <button
+            class="tab-btn"
+            [class.active]="aiTab === 'schemes'"
+            (click)="aiTab = 'schemes'; matchSchemes()">
+            🏛 Schemes
+          </button>
+        </div>
+
+        <div class="ai-content">
+          <div *ngIf="loadingAI" class="loading">Generating insights...</div>
+
+          <div *ngIf="!loadingAI && aiTab === 'analysis'" class="ai-text">
+            {{ insight?.data?.analysis || 'Click to generate analysis' }}
+          </div>
+
+          <div *ngIf="!loadingAI && aiTab === 'market'" class="ai-text">
+            {{ insight?.data?.market_intel || 'Click to generate market intelligence' }}
+          </div>
+
+          <div *ngIf="!loadingAI && aiTab === 'action'" class="ai-text">
+            {{ insight?.data?.action_plan || 'Click to generate 90-day action plan' }}
+          </div>
+
+          <div *ngIf="!loadingAI && aiTab === 'valuation'" class="ai-text">
+            {{ insight?.data?.valuation || 'Click to estimate valuation' }}
+          </div>
+
+          <div *ngIf="!loadingAI && aiTab === 'schemes'" class="schemes-list">
+            <ng-container *ngIf="insight?.data?.schemes as schemes">
+              <div class="scheme-item" *ngFor="let scheme of schemes">
+                <h4>{{ scheme.name }}</h4>
+                <p>{{ scheme.description }}</p>
+                <a *ngIf="scheme.url" [href]="scheme.url" target="_blank">Learn more →</a>
+              </div>
+              <p *ngIf="schemes.length === 0">No schemes matched</p>
+            </ng-container>
+            <p *ngIf="!insight?.data?.schemes">No schemes matched</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

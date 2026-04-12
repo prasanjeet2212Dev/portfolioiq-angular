@@ -1,0 +1,87 @@
+<div class="dashboard">
+  <div class="dashboard-header">
+    <div>
+      <h1>Dashboard</h1>
+      <p class="subtitle">{{ institution?.name }}</p>
+    </div>
+    <button class="btn btn-secondary" (click)="logout()">↪ Sign Out</button>
+  </div>
+
+  <div class="kpi-grid" *ngIf="!loading">
+    <div class="kpi-card">
+      <div class="kpi-label">Total Startups</div>
+      <div class="kpi-value">{{ stats.total }}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Avg IR Score</div>
+      <div class="kpi-value" [ngClass]="'score-' + (stats.avgScore >= 70 ? 'excellent' : stats.avgScore >= 60 ? 'good' : stats.avgScore >= 45 ? 'fair' : 'poor')">
+        {{ stats.avgScore }}
+      </div>
+    </div>
+    <div class="kpi-card warning" *ngIf="stats.highRisk > 0">
+      <div class="kpi-label">🚨 Runway Risk</div>
+      <div class="kpi-value">{{ stats.highRisk }} startups</div>
+    </div>
+    <div class="kpi-card success">
+      <div class="kpi-label">✓ Above Target (70+)</div>
+      <div class="kpi-value">{{ stats.aboveTarget }}</div>
+    </div>
+  </div>
+
+  <!-- Stage Distribution -->
+  <div class="section card">
+    <h2>Portfolio by Stage</h2>
+    <div class="stage-grid">
+      <div class="stage-item" *ngFor="let stage of (stageDistribution | keyvalue)">
+        <div class="stage-bar" [style.width.%]="(stage.value / stats.total * 100) || 0"></div>
+        <div class="stage-label">{{ stage.key }}</div>
+        <div class="stage-count">{{ stage.value }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Startups List -->
+  <div class="section card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <h2>Startups</h2>
+      <button class="btn btn-gold" (click)="addStartup()">+ Add Startup</button>
+    </div>
+
+    <div class="startups-grid" *ngIf="startups.length > 0">
+      <div class="startup-card" *ngFor="let startup of startups" (click)="viewStartup(startup.id)">
+        <div class="startup-header">
+          <div>
+            <h3>{{ startup.data.name }}</h3>
+            <p class="startup-sector">{{ startup.data.sector }}</p>
+          </div>
+          <div class="score-badge" [ngClass]="getScoreColor(startup.score || 0)">
+            {{ startup.score || 0 }}
+          </div>
+        </div>
+
+        <div class="startup-meta">
+          <span class="meta-item">📊 {{ startup.data.stage }}</span>
+          <span class="meta-item" *ngIf="startup.data.revenue">₹ {{ (startup.data.revenue / 1000000).toFixed(1) }}M</span>
+          <span class="meta-item" *ngIf="startup.data.runway" [ngClass]="startup.status">
+            ⏱️ {{ startup.data.runway }}m runway
+          </span>
+        </div>
+
+        <div class="startup-scores">
+          <div class="score-bar">
+            <label>IR</label>
+            <div class="bar-bg">
+              <div class="bar-fill" [style.width.%]="startup.ir_score || 0"></div>
+            </div>
+            <span>{{ startup.ir_score || 0 }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="startups.length === 0 && !loading">
+      <p>No startups added yet. Create your first portfolio entry.</p>
+      <button class="btn btn-gold" (click)="addStartup()">Add Your First Startup</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,130 @@
+<div class="auth-screen">
+  <div class="auth-container">
+    <!-- Brand Panel -->
+    <div class="auth-brand-panel">
+      <div>
+        <div class="brand-logo"><span class="piq">Portfolio</span><span class="suffix">IQ</span></div>
+        <div class="brand-tagline">The intelligence layer for Indian incubators. Track metrics, score startups, and surface investment-ready companies to LPs.</div>
+      </div>
+
+      <div class="brand-features">
+        <div class="brand-feat">
+          <div class="feat-icon">📊</div>
+          <div class="feat-text">
+            <strong>Live Portfolio Dashboard</strong>
+            <span>Investment readiness scores, runway alerts, MRR tracking — updating in real time.</span>
+          </div>
+        </div>
+        <div class="brand-feat">
+          <div class="feat-icon">✦</div>
+          <div class="feat-text">
+            <strong>3-Model AI Intelligence</strong>
+            <span>Three-angle Claude analysis — investment verdict, market intelligence, and 90-day action plan.</span>
+          </div>
+        </div>
+        <div class="brand-feat">
+          <div class="feat-icon">⬡</div>
+          <div class="feat-text">
+            <strong>Market Sizing Wizard</strong>
+            <span>Bottom-up TAM validation. Catches 10–100× founder inflation before it reaches investors.</span>
+          </div>
+        </div>
+        <div class="brand-feat">
+          <div class="feat-icon">🏛</div>
+          <div class="feat-text">
+            <strong>Multi-Institution</strong>
+            <span>Each incubator gets a completely private, isolated workspace. Your portfolio is never visible to others.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="brand-footer">Built for Indian incubators · Powered by Supabase & Claude AI</div>
+    </div>
+
+    <!-- Form Panel -->
+    <div class="auth-form-panel">
+      <div class="auth-form-title">Welcome back</div>
+      <div class="auth-form-sub">Sign in to your institution workspace.</div>
+
+      <div class="seg-control">
+        <button
+          class="seg-btn"
+          [class.active]="activeTab === 'login'"
+          (click)="switchTab('login')">Sign In</button>
+        <button
+          class="seg-btn"
+          [class.active]="activeTab === 'register'"
+          (click)="switchTab('register')">Register</button>
+      </div>
+
+      <!-- LOGIN -->
+      <div class="auth-panel" *ngIf="activeTab === 'login'">
+        <div class="auth-field">
+          <label>Institution Code</label>
+          <input
+            type="text"
+            [(ngModel)]="loginSlug"
+            placeholder="e.g. iit-kanpur"
+            (keydown.enter)="doLogin()">
+        </div>
+        <div class="auth-field">
+          <label>Passcode</label>
+          <input
+            type="password"
+            [(ngModel)]="loginPass"
+            placeholder="Your institution passcode"
+            (keydown.enter)="doLogin()">
+        </div>
+        <button
+          class="btn btn-gold btn-full btn-lg"
+          (click)="doLogin()"
+          [disabled]="loading">{{ loading ? 'Signing in...' : 'Sign In →' }}</button>
+        <div class="auth-error" *ngIf="error">{{ error }}</div>
+      </div>
+
+      <!-- REGISTER -->
+      <div class="auth-panel" *ngIf="activeTab === 'register'">
+        <div class="auth-info">
+          Each institution gets a completely private workspace. Your portfolio data is never shared or visible to anyone outside your team.
+        </div>
+        <div class="auth-field">
+          <label>Institution Full Name</label>
+          <input
+            type="text"
+            [(ngModel)]="regName"
+            placeholder="e.g. IIT Kanpur — SIIC"
+            autocorrect="off"
+            autocapitalize="off">
+        </div>
+        <div class="auth-field">
+          <label>Institution Code <span style="color:var(--t3);font-weight:400">(lowercase, no spaces)</span></label>
+          <input
+            type="text"
+            [(ngModel)]="regSlug"
+            placeholder="e.g. iit-kanpur"
+            (change)="onRegSlugChange()">
+        </div>
+        <div class="auth-field">
+          <label>City (Optional)</label>
+          <input
+            type="text"
+            [(ngModel)]="regCity"
+            placeholder="e.g. Kanpur">
+        </div>
+        <div class="auth-field">
+          <label>Passcode</label>
+          <input
+            type="password"
+            [(ngModel)]="regPass"
+            placeholder="Create a strong passcode"
+            (keydown.enter)="doRegister()">
+        </div>
+        <button
+          class="btn btn-gold btn-full btn-lg"
+          (click)="doRegister()"
+          [disabled]="loading">{{ loading ? 'Creating...' : 'Create Workspace →' }}</button>
+        <div class="auth-error" *ngIf="error">{{ error }}</div>
+      </div>
+    </div>
+  </div>
+</div>
