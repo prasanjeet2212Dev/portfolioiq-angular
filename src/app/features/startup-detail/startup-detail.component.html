@@ -3,6 +3,7 @@
     <button class="btn-back" (click)="goBack()">← Back</button>
     <h1>{{ startup.data['name'] }}</h1>
     <div class="header-actions">
+      <button class="btn btn-primary" (click)="exportReport()">📥 Export Report</button>
       <button class="btn btn-secondary" (click)="showSettings = !showSettings">⚙ AI Settings</button>
       <button class="btn btn-danger" (click)="deleteStartup()">🗑 Delete</button>
     </div>
@@ -55,26 +56,15 @@
         <div class="score-large" [ngClass]="getScoreColor(scores.ir_score)">
           {{ scores.ir_score }}
         </div>
-        <div class="score-breakdown">
-          <div class="breakdown-item">
-            <span>MRR Impact</span>
-            <div class="bar">
-              <div class="fill" [style.width.%]="(startup.data['mrr'] ? Math.min(+startup.data['mrr'] / 10000, 100) : 0)"></div>
-            </div>
-          </div>
-          <div class="breakdown-item">
-            <span>Growth Rate</span>
-            <div class="bar">
-              <div class="fill" [style.width.%]="getGrowthWidth()"></div>
-            </div>
-          </div>
-          <div class="breakdown-item">
-            <span>Team Size</span>
-            <div class="bar">
-              <div class="fill" [style.width.%]="getTeamSizeWidth()"></div>
-            </div>
-          </div>
+        <app-score-breakdown [startupData]="startup.data" [scoreType]="'ir'"></app-score-breakdown>
+      </div>
+
+      <div class="card">
+        <h2>Market Potential Score</h2>
+        <div class="score-large" [ngClass]="getScoreColor(scores.mp_score)">
+          {{ scores.mp_score }}
         </div>
+        <app-score-breakdown [startupData]="startup.data" [scoreType]="'mp'"></app-score-breakdown>
       </div>
     </div>
 
@@ -85,64 +75,116 @@
           <button
             class="tab-btn"
             [class.active]="aiTab === 'analysis'"
-            (click)="aiTab = 'analysis'; generateAnalysis()">
+            (click)="aiTab = 'analysis'">
             📊 Analysis
           </button>
           <button
             class="tab-btn"
             [class.active]="aiTab === 'market'"
-            (click)="aiTab = 'market'; generateMarketIntel()">
+            (click)="aiTab = 'market'">
             📈 Market Intel
           </button>
           <button
             class="tab-btn"
             [class.active]="aiTab === 'action'"
-            (click)="aiTab = 'action'; generateActionPlan()">
+            (click)="aiTab = 'action'">
             🎯 Action Plan
           </button>
           <button
             class="tab-btn"
             [class.active]="aiTab === 'valuation'"
-            (click)="aiTab = 'valuation'; generateValuation()">
+            (click)="aiTab = 'valuation'">
             💰 Valuation
           </button>
           <button
             class="tab-btn"
             [class.active]="aiTab === 'schemes'"
-            (click)="aiTab = 'schemes'; matchSchemes()">
+            (click)="aiTab = 'schemes'">
             🏛 Schemes
           </button>
         </div>
 
         <div class="ai-content">
-          <div *ngIf="loadingAI" class="loading">Generating insights...</div>
-
-          <div *ngIf="!loadingAI && aiTab === 'analysis'" class="ai-text">
-            {{ insight?.data?.analysis || 'Click to generate analysis' }}
+          <div *ngIf="loadingAI" class="loading">
+            <div class="spinner"></div>
+            <p>Generating insights with AI...</p>
           </div>
 
-          <div *ngIf="!loadingAI && aiTab === 'market'" class="ai-text">
-            {{ insight?.data?.market_intel || 'Click to generate market intelligence' }}
+          <!-- Analysis Tab -->
+          <div *ngIf="!loadingAI && aiTab === 'analysis'">
+            <div *ngIf="insight?.data?.analysis" class="ai-text">
+              {{ insight?.data?.analysis }}
+            </div>
+            <div *ngIf="!insight?.data?.analysis" class="ai-empty">
+              <p>No analysis generated yet.</p>
+              <button class="btn-generate" (click)="generateAnalysis()">
+                ✨ Generate AI Analysis
+              </button>
+            </div>
           </div>
 
-          <div *ngIf="!loadingAI && aiTab === 'action'" class="ai-text">
-            {{ insight?.data?.action_plan || 'Click to generate 90-day action plan' }}
+          <!-- Market Intel Tab -->
+          <div *ngIf="!loadingAI && aiTab === 'market'">
+            <div *ngIf="insight?.data?.market_intel" class="ai-text">
+              {{ insight?.data?.market_intel }}
+            </div>
+            <div *ngIf="!insight?.data?.market_intel" class="ai-empty">
+              <p>No market intelligence generated yet.</p>
+              <button class="btn-generate" (click)="generateMarketIntel()">
+                ✨ Generate Market Intel
+              </button>
+            </div>
           </div>
 
-          <div *ngIf="!loadingAI && aiTab === 'valuation'" class="ai-text">
-            {{ insight?.data?.valuation || 'Click to estimate valuation' }}
+          <!-- Action Plan Tab -->
+          <div *ngIf="!loadingAI && aiTab === 'action'">
+            <div *ngIf="insight?.data?.action_plan" class="ai-text">
+              {{ insight?.data?.action_plan }}
+            </div>
+            <div *ngIf="!insight?.data?.action_plan" class="ai-empty">
+              <p>No action plan generated yet.</p>
+              <button class="btn-generate" (click)="generateActionPlan()">
+                ✨ Generate Action Plan
+              </button>
+            </div>
           </div>
 
-          <div *ngIf="!loadingAI && aiTab === 'schemes'" class="schemes-list">
+          <!-- Valuation Tab -->
+          <div *ngIf="!loadingAI && aiTab === 'valuation'">
+            <div *ngIf="insight?.data?.valuation" class="ai-text">
+              {{ insight?.data?.valuation }}
+            </div>
+            <div *ngIf="!insight?.data?.valuation" class="ai-empty">
+              <p>No valuation estimate generated yet.</p>
+              <button class="btn-generate" (click)="generateValuation()">
+                ✨ Estimate Valuation
+              </button>
+            </div>
+          </div>
+
+          <!-- Schemes Tab -->
+          <div *ngIf="!loadingAI && aiTab === 'schemes'">
             <ng-container *ngIf="insight?.data?.schemes as schemes">
-              <div class="scheme-item" *ngFor="let scheme of schemes">
-                <h4>{{ scheme.name }}</h4>
-                <p>{{ scheme.description }}</p>
-                <a *ngIf="scheme.url" [href]="scheme.url" target="_blank">Learn more →</a>
+              <div *ngIf="schemes.length > 0" class="schemes-list">
+                <div class="scheme-item" *ngFor="let scheme of schemes">
+                  <h4>{{ scheme.name }}</h4>
+                  <p>{{ scheme.description }}</p>
+                  <a *ngIf="scheme.url" [href]="scheme.url" target="_blank">Learn more →</a>
+                </div>
               </div>
-              <p *ngIf="schemes.length === 0">No schemes matched</p>
+              <div *ngIf="schemes.length === 0" class="ai-empty">
+                <p>No government schemes matched yet.</p>
+                <button class="btn-generate" (click)="matchSchemes()">
+                  ✨ Match Schemes
+                </button>
+              </div>
             </ng-container>
-            <p *ngIf="!insight?.data?.schemes">No schemes matched</p>
+            <div *ngIf="!insight?.data?.schemes" class="ai-empty">
+              <p>No government schemes matched yet.</p>
+              <button class="btn-generate" (click)="matchSchemes()">
+                ✨ Match Schemes
+              </button>
+            </div>
           </div>
         </div>
       </div>

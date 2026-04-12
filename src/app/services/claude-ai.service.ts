@@ -7,19 +7,32 @@ import { environment } from '../../environments/environment';
 })
 export class ClaudeAIService {
   private apiKey = '';
+  private provider: 'claude' | 'github' = 'github';
 
   constructor() {
     this.restoreAPIKey();
+    this.provider = (environment as any).ai?.provider || 'github';
   }
 
   setAPIKey(key: string) {
     this.apiKey = key;
-    localStorage.setItem('piq_claude_key', key);
+    localStorage.setItem('piq_ai_key', key);
   }
 
   private restoreAPIKey() {
-    // Use environment config first, fallback to localStorage
-    this.apiKey = environment.claude.apiKey || localStorage.getItem('piq_claude_key') || '';
+    // Check environment config first, fallback to localStorage
+    const env = environment as any;
+    if (env.ai) {
+      if (env.ai.provider === 'github' && env.ai.github?.token) {
+        this.apiKey = env.ai.github.token;
+      } else if (env.ai.provider === 'claude' && env.ai.claude?.apiKey) {
+        this.apiKey = env.ai.claude.apiKey;
+      }
+    }
+    // Fallback to localStorage
+    if (!this.apiKey) {
+      this.apiKey = localStorage.getItem('piq_ai_key') || '';
+    }
   }
 
   async analyzeStartup(startup: Startup): Promise<string> {
@@ -88,8 +101,75 @@ Only return the JSON array, no other text.`;
   }
 
   private async callClaude(prompt: string): Promise<string> {
-    // Use proxy endpoint to avoid CORS issues in development.
-    // In production, the Netlify function will use a server-side secret.
+    if (this.provider === 'github') {
+      return this.callGitHubModels(prompt);
+    } else {
+      return this.callClaudeAPI(prompt);
+    }
+  }
+
+  private async callGitHubModels(prompt: string): Promise<string> {
+    const env = environment as any;
+    const model = env.ai?.github?.model || 'gpt-4o';
+    
+    console.log('GitHub Models - Making request with model:', model);
+    console.log('GitHub Models - Token available:', !!this.apiKey);
+    
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json'
+    };
+
+    if (this.apiKey) {
+      headers['Authorization'] = `Bearer ${this.apiKey}`;
+    }
+
+    const requestBody = {
+      messages: [
+        {
+          role: 'system',
+          content: 'You are an expert startup analyst specializing in the Indian startup ecosystem. Provide concise, actionable insights.'
+        },
+        {
+          role: 'user',
+          content: prompt
+        }
+      ],
+      model: model,
+      temperature: 0.7,
+      max_tokens: 1024
+    };
+
+    console.log('GitHub Models - Request body:', JSON.stringify(requestBody, null, 2));
+
+    const response = await fetch('/api/github-models/chat/completions', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(requestBody)
+    });
+
+    console.log('GitHub Models - Response status:', response.status);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('GitHub Models - Error response:', errorText);
+      let errorMsg = 'Unknown error';
+      try {
+        const error = JSON.parse(errorText);
+        errorMsg = error.error?.message || error.message || errorMsg;
+      } catch {
+        errorMsg = errorText || errorMsg;
+      }
+      throw new Error(`GitHub Models API error (${response.status}): ${errorMsg}`);
+    }
+
+    const data = await response.json();
+    console.log('GitHub Models - Response data:', data);
+    const content = data.choices?.[0]?.message?.content || '';
+    console.log('GitHub Models - Extracted content:', content);
+    return content;
+  }
+
+  private async callClaudeAPI(prompt: string): Promise<string> {
     const headers: Record<string, string> = {
       'anthropic-version': '2023-06-01',
       'anthropic-dangerous-direct-browser-access': 'true',

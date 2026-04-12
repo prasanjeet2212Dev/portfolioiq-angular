@@ -33,6 +33,7 @@
 .filter-row {
   display: flex;
   gap: 12px;
+  flex-wrap: wrap;
 }
 
 .filter-select {
@@ -50,6 +51,24 @@
 .filter-select:focus {
   border-color: #667eea;
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.btn-export {
+  padding: 8px 16px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  margin-left: auto;
+}
+
+.btn-export:hover {
+  background: #5568d3;
+  transform: translateY(-1px);
 }
 
 .startups-grid {

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -15,6 +16,9 @@ import { AdminComponent } from './features/admin/admin.component';
 import { ShowcaseComponent } from './features/showcase/showcase.component';
 import { AllStartupsComponent } from './features/all-startups/all-startups.component';
 import { MarketSizingComponent } from './features/market-sizing/market-sizing.component';
+import { ScoreBreakdownComponent } from './shared/score-breakdown/score-breakdown.component';
+import { MiniChartComponent } from './shared/mini-chart/mini-chart.component';
+import { ComparisonComponent } from './features/comparison/comparison.component';
 
 @NgModule({
   declarations: [
@@ -29,10 +33,14 @@ import { MarketSizingComponent } from './features/market-sizing/market-sizing.co
     AdminComponent,
     ShowcaseComponent,
     AllStartupsComponent,
-    MarketSizingComponent
+    MarketSizingComponent,
+    ScoreBreakdownComponent,
+    MiniChartComponent,
+    ComparisonComponent
   ],
   imports: [
     BrowserModule,
+    CommonModule,
     FormsModule,
     AppRoutingModule
   ],

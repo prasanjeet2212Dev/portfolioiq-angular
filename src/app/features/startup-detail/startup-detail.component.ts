@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SupabaseService } from '../../services/supabase.service';
 import { ScoringService } from '../../services/scoring.service';
 import { ClaudeAIService } from '../../services/claude-ai.service';
+import { ExportService } from '../../services/export.service';
 import { Startup, Insight } from '../../models';
 
 @Component({
@@ -27,7 +28,8 @@ export class StartupDetailComponent implements OnInit {
     private supabase: SupabaseService,
     private scoring: ScoringService,
     private claude: ClaudeAIService,
-    private ai: ClaudeAIService
+    private ai: ClaudeAIService,
+    private exportService: ExportService
   ) {}
 
   ngOnInit() {
@@ -131,8 +133,24 @@ export class StartupDetailComponent implements OnInit {
 
   private async saveInsight(data: any) {
     if (!this.startup) return;
-    const institution = await this.supabase.getCurrentInstitution().toPromise();
-    if (!institution) return;
+    
+    // For super admin, use startup's institution_id
+    let institutionId: number;
+    const isSuperAdmin = this.supabase.getSuperAdminStatus();
+    
+    if (isSuperAdmin) {
+      institutionId = this.startup.institution_id;
+      console.log('Super admin - using startup institution_id:', institutionId);
+    } else {
+      const institution = await this.supabase.getCurrentInstitution().toPromise();
+      if (!institution) {
+        console.error('No institution found for regular user');
+        alert('Error: Unable to save insight - no institution found');
+        return;
+      }
+      institutionId = institution.id;
+    }
+    
     const updated = {
       ...this.insight?.data,
       ...data,
@@ -140,8 +158,17 @@ export class StartupDetailComponent implements OnInit {
       mp_score: this.scores.mp_score,
       overall_score: this.scores.overall_score
     };
-    const insight = await this.supabase.saveInsight(this.startup.id, institution.id, updated);
-    this.insight = insight;
+    
+    console.log('Saving insight for startup:', this.startup.id, 'institution:', institutionId);
+    
+    try {
+      const insight = await this.supabase.saveInsight(this.startup.id, institutionId, updated);
+      this.insight = insight;
+      console.log('Insight saved successfully:', insight);
+    } catch (err) {
+      console.error('Error saving insight:', err);
+      alert('Error saving insight: ' + (err as any).message);
+    }
   }
 
   setAPIKey() {
@@ -180,5 +207,11 @@ export class StartupDetailComponent implements OnInit {
     if (!this.startup || !this.startup.data['teamSize']) return 0;
     const teamSize = parseInt(this.startup.data['teamSize'] as any, 10) || 0;
     return Math.min(teamSize * 5, 100);
+  }
+
+  exportReport() {
+    if (this.startup) {
+      this.exportService.exportStartupReport(this.startup);
+    }
   }
 }

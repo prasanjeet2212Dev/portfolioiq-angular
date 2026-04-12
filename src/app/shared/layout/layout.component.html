@@ -34,6 +34,10 @@
         <span class="nav-icon">📊</span>
         <span class="nav-label">All Startups</span>
       </a>
+      <a routerLink="/comparison" class="nav-item" [class.active]="isActive('/comparison')">
+        <span class="nav-icon">⚖</span>
+        <span class="nav-label">Compare</span>
+      </a>
       <a routerLink="/add-startup" class="nav-item" [class.active]="isActive('/add-startup')">
         <span class="nav-icon">+</span>
         <span class="nav-label">Add Startup</span>

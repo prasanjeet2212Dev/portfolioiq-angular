@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SupabaseService } from '../../services/supabase.service';
+import { ExportService } from '../../services/export.service';
 import { Startup } from '../../models';
 
 @Component({
@@ -20,6 +21,7 @@ export class AllStartupsComponent implements OnInit {
 
   constructor(
     private supabase: SupabaseService,
+    private exportService: ExportService,
     private router: Router
   ) {}
 
@@ -131,5 +133,9 @@ export class AllStartupsComponent implements OnInit {
     if (score >= 70) return 'score-good';
     if (score >= 40) return 'score-medium';
     return 'score-poor';
+  }
+
+  exportData() {
+    this.exportService.exportToCSV(this.filteredStartups, 'startups-export.csv');
   }
 }

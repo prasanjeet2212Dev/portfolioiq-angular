@@ -1,0 +1,150 @@
+<div class="comparison-page">
+  <div class="page-header">
+    <div>
+      <h1>Compare Startups</h1>
+      <p class="subtitle">Select up to {{ maxSelections }} startups to compare side-by-side</p>
+    </div>
+    <button class="btn-clear" (click)="clearAll()" *ngIf="selectedIds.length > 0">
+      Clear All ({{ selectedIds.length }})
+    </button>
+  </div>
+
+  <!-- Selection Grid -->
+  <div class="selection-section" *ngIf="selectedIds.length < maxSelections">
+    <h3>Select Startups to Compare</h3>
+    <div class="startup-grid">
+      <div class="startup-card" 
+           *ngFor="let startup of allStartups"
+           [class.selected]="isSelected(startup.id)"
+           [class.disabled]="!isSelected(startup.id) && !canSelect()"
+           (click)="toggleStartup(startup.id)">
+        <div class="card-check" *ngIf="isSelected(startup.id)">✓</div>
+        <div class="startup-name">{{ getStartupName(startup) }}</div>
+        <div class="startup-meta">{{ getStartupSector(startup) }} · {{ getStartupStage(startup) }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Comparison Table -->
+  <div class="comparison-section" *ngIf="comparisonData.length >= 2">
+    <h3>Comparison Matrix</h3>
+    <div class="comparison-table-wrapper">
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th class="metric-header">Metric</th>
+            <th *ngFor="let startup of comparisonData" class="startup-header">
+              <div class="startup-name">{{ startup.name }}</div>
+              <div class="startup-meta">{{ startup.sector }}</div>
+              <button class="btn-remove" (click)="toggleStartup(startup.id)">×</button>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Overall Score -->
+          <tr>
+            <td class="metric-label">Overall Score</td>
+            <td *ngFor="let startup of comparisonData" [class.best]="isBest(startup, 'overall_score')">
+              <div class="score-badge" [ngClass]="getScoreClass(startup.overall_score)">
+                {{ startup.overall_score }}
+              </div>
+            </td>
+          </tr>
+
+          <!-- IR Score -->
+          <tr>
+            <td class="metric-label">Investment Readiness</td>
+            <td *ngFor="let startup of comparisonData" [class.best]="isBest(startup, 'ir_score')">
+              <div class="score-badge" [ngClass]="getScoreClass(startup.ir_score)">
+                {{ startup.ir_score }}
+              </div>
+            </td>
+          </tr>
+
+          <!-- MP Score -->
+          <tr>
+            <td class="metric-label">Market Potential</td>
+            <td *ngFor="let startup of comparisonData" [class.best]="isBest(startup, 'mp_score')">
+              <div class="score-badge" [ngClass]="getScoreClass(startup.mp_score)">
+                {{ startup.mp_score }}
+              </div>
+            </td>
+          </tr>
+
+          <tr class="divider-row">
+            <td colspan="100">Key Metrics</td>
+          </tr>
+
+          <!-- MRR -->
+          <tr>
+            <td class="metric-label">Monthly Revenue (MRR)</td>
+            <td *ngFor="let startup of comparisonData" [class.best]="isBest(startup, 'mrr')">
+              {{ formatCurrency(startup.mrr) }}
+            </td>
+          </tr>
+
+          <!-- Runway -->
+          <tr>
+            <td class="metric-label">Runway</td>
+            <td *ngFor="let startup of comparisonData" [class.best]="isBest(startup, 'runway')">
+              {{ startup.runway }} months
+            </td>
+          </tr>
+
+          <!-- Team Size -->
+          <tr>
+            <td class="metric-label">Team Size</td>
+            <td *ngFor="let startup of comparisonData" [class.best]="isBest(startup, 'teamSize')">
+              {{ startup.teamSize }} members
+            </td>
+          </tr>
+
+          <!-- Growth Rate -->
+          <tr>
+            <td class="metric-label">Growth Rate</td>
+            <td *ngFor="let startup of comparisonData" [class.best]="isBest(startup, 'growth')">
+              {{ (startup.growth * 100).toFixed(1) }}%
+            </td>
+          </tr>
+
+          <tr class="divider-row">
+            <td colspan="100">Details</td>
+          </tr>
+
+          <!-- Stage -->
+          <tr>
+            <td class="metric-label">Stage</td>
+            <td *ngFor="let startup of comparisonData">
+              {{ startup.stage }}
+            </td>
+          </tr>
+
+          <!-- Sector -->
+          <tr>
+            <td class="metric-label">Sector</td>
+            <td *ngFor="let startup of comparisonData">
+              {{ startup.sector }}
+            </td>
+          </tr>
+
+          <!-- Actions -->
+          <tr>
+            <td class="metric-label">Actions</td>
+            <td *ngFor="let startup of comparisonData">
+              <button class="btn-view" (click)="viewStartup(startup.id)">
+                View Details →
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="comparisonData.length < 2">
+    <div class="empty-icon">📊</div>
+    <h3>Select startups to compare</h3>
+    <p>Choose at least 2 startups from the list above to see a side-by-side comparison</p>
+  </div>
+</div>

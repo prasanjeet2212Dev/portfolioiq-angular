@@ -32,6 +32,9 @@
         <option value="medium">40-70 (Medium)</option>
         <option value="low"><40 (Low)</option>
       </select>
+      <button class="btn-export" (click)="exportData()" *ngIf="filteredStartups.length > 0">
+        📥 Export
+      </button>
     </div>
   </div>
 

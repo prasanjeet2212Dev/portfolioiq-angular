@@ -1,82 +1,75 @@
 <div class="dashboard-page">
-  <div class="dash-grid">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Loading dashboard...</p>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && kpis.startupCount === 0" class="empty-state">
+    <div class="empty-icon">📊</div>
+    <h2>No Startups Yet</h2>
+    <p>Start building your portfolio by adding your first startup</p>
+    <button class="btn-primary" routerLink="/add-startup">+ Add Startup</button>
+  </div>
+
+  <!-- Dashboard Content -->
+  <div *ngIf="!loading && kpis.startupCount > 0" class="dash-grid">
     <!-- KPI Cards -->
     <div class="kpi-row">
       <div class="kpi-card">
         <div class="kpi-label">PORTFOLIO MRR</div>
-        <div class="kpi-value">₹0</div>
-        <div class="kpi-sub">1 companies</div>
+        <div class="kpi-value">{{ formatCurrency(kpis.totalMRR) }}</div>
+        <div class="kpi-sub">{{ kpis.startupCount }} companies</div>
       </div>
       <div class="kpi-card">
         <div class="kpi-label">TOTAL FUNDING RAISED</div>
-        <div class="kpi-value">₹0</div>
+        <div class="kpi-value">{{ formatCurrency(kpis.totalFunding) }}</div>
         <div class="kpi-sub">Across all portfolio</div>
       </div>
       <div class="kpi-card">
         <div class="kpi-label">AVG INVESTMENT READINESS</div>
-        <div class="kpi-value score-poor">3/100</div>
+        <div class="kpi-value" [ngClass]="getScoreClass(kpis.avgIRScore)">{{ kpis.avgIRScore }}/100</div>
         <div class="kpi-sub">Portfolio health</div>
       </div>
       <div class="kpi-card">
         <div class="kpi-label">AVG RUNWAY</div>
-        <div class="kpi-value score-critical">0mo</div>
-        <div class="kpi-sub">1 critical</div>
+        <div class="kpi-value" [ngClass]="kpis.avgRunway <= 3 ? 'score-critical' : kpis.avgRunway <= 6 ? 'score-poor' : 'score-medium'"          >{{ kpis.avgRunway }}mo</div>
+        <div class="kpi-sub">{{ kpis.criticalRunway }} critical</div>
       </div>
     </div>
 
     <!-- Stage Distribution -->
     <div class="chart-card">
       <h3>Stage Distribution</h3>
-      <div class="stage-bars">
-        <div class="stage-row">
-          <div class="stage-label">Idea</div>
+      <div class="stage-bars" *ngIf="getStageEntries().length > 0">
+        <div class="stage-row" *ngFor="let stage of getStageEntries()">
+          <div class="stage-label">{{ stage.label }}</div>
           <div class="stage-bar-bg">
-            <div class="stage-bar-fill" style="width: 100%"></div>
+            <div class="stage-bar-fill" [style.width.%]="stage.percentage"></div>
           </div>
-          <div class="stage-count">1</div>
+          <div class="stage-count">{{ stage.count }}</div>
         </div>
-        <div class="stage-row">
-          <div class="stage-label">Prototype</div>
-          <div class="stage-bar-bg">
-            <div class="stage-bar-fill" style="width: 0%"></div>
-          </div>
-          <div class="stage-count">0</div>
-        </div>
-        <div class="stage-row">
-          <div class="stage-label">MVP</div>
-          <div class="stage-bar-bg">
-            <div class="stage-bar-fill" style="width: 0%"></div>
-          </div>
-          <div class="stage-count">0</div>
-        </div>
-        <div class="stage-row">
-          <div class="stage-label">Growth</div>
-          <div class="stage-bar-bg">
-            <div class="stage-bar-fill" style="width: 0%"></div>
-          </div>
-          <div class="stage-count">0</div>
-        </div>
-        <div class="stage-row">
-          <div class="stage-label">Scale</div>
-          <div class="stage-bar-bg">
-            <div class="stage-bar-fill" style="width: 0%"></div>
-          </div>
-          <div class="stage-count">0</div>
-        </div>
+      </div>
+      <div class="empty-chart" *ngIf="getStageEntries().length === 0">
+        <p>No stage data available</p>
       </div>
     </div>
 
     <!-- Sector Breakdown -->
     <div class="chart-card">
       <h3>Sector Breakdown</h3>
-      <div class="stage-bars">
-        <div class="stage-row">
-          <div class="stage-label">AgriTech</div>
+      <div class="stage-bars" *ngIf="getSectorEntries().length > 0">
+        <div class="stage-row" *ngFor="let sector of getSectorEntries()">
+          <div class="stage-label">{{ sector.label }}</div>
           <div class="stage-bar-bg">
-            <div class="stage-bar-fill" style="width: 100%"></div>
+            <div class="stage-bar-fill" [style.width.%]="sector.percentage"></div>
           </div>
-          <div class="stage-count">1</div>
+          <div class="stage-count">{{ sector.count }}</div>
         </div>
+      </div>
+      <div class="empty-chart" *ngIf="getSectorEntries().length === 0">
+        <p>No sector data available</p>
       </div>
     </div>
 
@@ -84,17 +77,20 @@
     <div class="list-card">
       <div class="card-header">
         <h3>Investment Readiness</h3>
-        <span class="badge badge-warning">Top 5</span>
+        <span class="badge badge-warning">Top {{ topStartups.length }}</span>
       </div>
-      <div class="startup-list">
-        <div class="startup-item">
-          <div class="startup-rank">#1</div>
+      <div class="startup-list" *ngIf="topStartups.length > 0">
+        <div class="startup-item" *ngFor="let startup of topStartups; let i = index" (click)="viewStartup(startup.id)"          style="cursor: pointer;">
+          <div class="startup-rank">#{{ i + 1 }}</div>
           <div class="startup-info">
-            <div class="startup-name">KrishiSetu</div>
-            <div class="startup-meta">AgriTech · Idea</div>
+            <div class="startup-name">{{ startup.name }}</div>
+            <div class="startup-meta">{{ startup.sector }} · {{ startup.stage }}</div>
           </div>
-          <div class="startup-score score-poor">3</div>
+          <div class="startup-score" [ngClass]="getScoreClass(startup.ir_score)">{{ startup.ir_score }}</div>
         </div>
+      </div>
+      <div class="empty-list" *ngIf="topStartups.length === 0">
+        <p>No startups to show</p>
       </div>
     </div>
 
@@ -102,19 +98,25 @@
     <div class="list-card">
       <div class="card-header">
         <h3>Needs Attention</h3>
-        <span class="badge badge-danger">Action Required</span>
-      </div>
-      <div class="startup-list">
-        <div class="startup-item">
+        <span class="badge badge-danger">{{ needsAttention.length }} Items</span>
+      </div>      <div class="startup-list" *ngIf="needsAttention.length > 0">
+        <div class="startup-item" *ngFor="let item of needsAttention" (click)="viewStartup(item.id)" style="cursor: pointer;">
           <div class="startup-info">
-            <div class="startup-name">KrishiSetu</div>
+            <div class="startup-name">{{ item.name }}</div>
             <div class="startup-tags">
-              <span class="tag tag-critical">Critical runway</span>
-              <span class="tag tag-warning">Market potential</span>
+              <span class="tag" 
+                    [ngClass]="{
+                      'tag-critical': tag.includes('Critical'),
+                      'tag-warning': tag.includes('Low') || tag.includes('No') || tag.includes('Market')
+                    }"
+                    *ngFor="let tag of item.tags">{{ tag }}</span>
             </div>
           </div>
-          <a href="#" class="link-view">View</a>
+          <a class="link-view" (click)="viewStartup(item.id); $event.stopPropagation()">View</a>
         </div>
+      </div>
+      <div class="empty-list" *ngIf="needsAttention.length === 0">
+        <p>✅ All startups are in good health!</p>
       </div>
     </div>
   </div>
