@@ -23,7 +23,7 @@ export class ClaudeAIService {
   }
 
   async analyzeStartup(startup: Startup): Promise<string> {
-    if (!this.apiKey) throw new Error('Claude API key not configured');
+    // Local API key is optional when a backend server secret is configured.
 
     const prompt = `Analyze this Indian startup for investment readiness in 2-3 sentences:
 Name: ${startup.data.name}
@@ -39,7 +39,7 @@ Runway: ${startup.data.runway || 0} months`;
   }
 
   async generateMarketIntel(startup: Startup): Promise<string> {
-    if (!this.apiKey) throw new Error('Claude API key not configured');
+    // Local API key is optional when a backend server secret is configured.
 
     const prompt = `Provide market intelligence on the ${startup.data.sector} sector in India affecting ${startup.data.name}. Focus on opportunities and threats in 2-3 sentences.`;
 
@@ -47,7 +47,7 @@ Runway: ${startup.data.runway || 0} months`;
   }
 
   async generateActionPlan(startup: Startup): Promise<string> {
-    if (!this.apiKey) throw new Error('Claude API key not configured');
+    // Local API key is optional when a backend server secret is configured.
 
     const prompt = `Create a 90-day action plan for ${startup.data.name} (${startup.data.stage} stage, ${startup.data.sector}). Focus on 3-4 key milestones.`;
 
@@ -55,7 +55,7 @@ Runway: ${startup.data.runway || 0} months`;
   }
 
   async estimateValuation(startup: Startup): Promise<string> {
-    if (!this.apiKey) throw new Error('Claude API key not configured');
+    // Local API key is optional when a backend server secret is configured.
 
     const prompt = `Estimate a valuation range in ₹ Cr for ${startup.data.name}:
 - Stage: ${startup.data.stage}
@@ -67,7 +67,7 @@ Provide 1-2 comparable Indian deals and justify the range.`;
   }
 
   async matchGovernmentSchemes(startup: Startup): Promise<any[]> {
-    if (!this.apiKey) throw new Error('Claude API key not configured');
+    // Local API key is optional when a backend server secret is configured.
 
     const prompt = `Identify government schemes (central & state) for this startup:
 Name: ${startup.data.name}
@@ -88,16 +88,21 @@ Only return the JSON array, no other text.`;
   }
 
   private async callClaude(prompt: string): Promise<string> {
-    // Use proxy endpoint to avoid CORS issues in development
-    // In production, this should be routed through a proper backend API
+    // Use proxy endpoint to avoid CORS issues in development.
+    // In production, the Netlify function will use a server-side secret.
+    const headers: Record<string, string> = {
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true',
+      'content-type': 'application/json'
+    };
+
+    if (this.apiKey) {
+      headers['x-api-key'] = this.apiKey;
+    }
+
     const response = await fetch('/api/claude', {
       method: 'POST',
-      headers: {
-        'x-api-key': this.apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true',
-        'content-type': 'application/json'
-      },
+      headers,
       body: JSON.stringify({
         model: 'claude-3-5-sonnet-20241022',
         max_tokens: 1024,

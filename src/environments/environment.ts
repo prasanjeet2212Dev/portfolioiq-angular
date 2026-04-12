@@ -9,7 +9,7 @@ export const environment = {
     key: 'sb_publishable_dZXEzlt_Ztwsa6hARg-Lzg_iyeGbbYi'
   },
   claude: {
-    apiKey: '' // Add your Claude API key here locally
+    apiKey: '' // Use Settings page in development or server-side secret in production.
   }
 };
 
