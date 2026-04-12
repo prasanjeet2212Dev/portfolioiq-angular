@@ -14,8 +14,9 @@
 - **Tables Created:** ✅ institutions, startups, insights with RLS policies
 
 ### Claude AI Setup ✅
-- **API Key:** Configured in the app
-- **Access:** Via ⚙ Settings → AI Settings after login
+- **API Key:** Must be added to environment files before deployment
+- **Access:** Via ⚙ Settings → AI Settings after login (for runtime key override)
+- **Production Deployment:** See "Deploying to Netlify" section below
 
 ## Quick Start Guide
 
@@ -69,6 +70,35 @@
 - See README.md in the repository for detailed setup
 - Netlify logs available in dashboard for debugging
 - All AI features require valid Claude API key
+
+## Deploying to Netlify
+
+### Claude API Key Setup
+The Claude API key is **not** committed to the repository for security reasons. Users must add it via the Settings page after logging in:
+
+1. **After Deployment:** App builds and deploys without Claude API key
+2. **Users Add Their Own Key:**
+   - Log in to the app
+   - Click **⚙ Settings** icon in sidebar 
+   - Paste Claude API key
+   - Click "Save Key"
+   - AI features are now enabled for that user
+
+The API key is stored in browser localStorage and persists across sessions.
+
+**Security Note:** The current implementation uses direct browser API calls with the `dangerous-direct-browser-access` header. For production, consider:
+- Moving Claude API calls to a backend server/Netlify Functions
+- Using API key rotation and rate limiting
+- Implementing proper authentication middleware
+
+### Build Process
+```bash
+# Netlify automatically runs:
+npm install
+npm run build
+
+# Deploys: dist/portfolioiq-angular folder
+```
 
 ---
 
