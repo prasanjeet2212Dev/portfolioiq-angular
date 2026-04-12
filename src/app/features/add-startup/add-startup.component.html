@@ -1,0 +1,82 @@
+<div class="add-startup">
+  <div class="header">
+    <button class="btn-back" (click)="goBack()">← Back to Dashboard</button>
+    <h1>Add New Startup</h1>
+  </div>
+
+  <div class="form-container">
+    <form (ngSubmit)="addStartup()">
+      <div class="form-section">
+        <h2>Basic Information</h2>
+
+        <div class="form-group">
+          <label>Startup Name *</label>
+          <input type="text" [(ngModel)]="name" name="name" placeholder="e.g. KrishiSetu" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Sector *</label>
+            <input type="text" [(ngModel)]="sector" name="sector" placeholder="e.g. AgriTech" required>
+          </div>
+          <div class="form-group">
+            <label>City *</label>
+            <input type="text" [(ngModel)]="city" name="city" placeholder="e.g. Durgapur" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Stage</label>
+            <select [(ngModel)]="stage" name="stage">
+              <option value="pre-seed">Pre-Seed</option>
+              <option value="seed">Seed</option>
+              <option value="series-a">Series A</option>
+              <option value="series-b">Series B</option>
+              <option value="series-c">Series C+</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Team Size</label>
+            <input type="number" [(ngModel)]="teamSize" name="teamSize" placeholder="0">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2>Financial Metrics</h2>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Annual Revenue (₹)</label>
+            <input type="number" [(ngModel)]="revenue" name="revenue" placeholder="0">
+          </div>
+          <div class="form-group">
+            <label>MRR (₹)</label>
+            <input type="number" [(ngModel)]="mrr" name="mrr" placeholder="0">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Runway (months)</label>
+            <input type="number" [(ngModel)]="runway" name="runway" placeholder="0">
+          </div>
+          <div class="form-group">
+            <label>Growth Rate (monthly %)</label>
+            <input type="number" [(ngModel)]="growthRate" name="growthRate" placeholder="0" step="0.01">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="goBack()">Cancel</button>
+        <button type="submit" class="btn btn-gold" [disabled]="loading">
+          {{ loading ? 'Adding...' : 'Add Startup →' }}
+        </button>
+      </div>
+
+      <div class="error" *ngIf="error">{{ error }}</div>
+    </form>
+  </div>
+</div>
