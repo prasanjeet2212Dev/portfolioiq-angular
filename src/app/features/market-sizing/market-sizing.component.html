@@ -10,9 +10,11 @@
         <div class="form-row">
           <div class="form-field">
             <label>Link to Startup</label>
-            <select [(ngModel)]="linkToStartup" class="form-select">
+            <select [(ngModel)]="linkToStartup" (change)="onStartupSelected($event)" class="form-select">
               <option value="standalone">Standalone calculation</option>
-              <option value="startup1">Startup 1</option>
+              <option *ngFor="let startup of startups" [value]="startup.id">
+                {{ startup.data['name'] }}
+              </option>
             </select>
           </div>
           <div class="form-field">

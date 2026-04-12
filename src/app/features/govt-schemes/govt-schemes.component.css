@@ -259,3 +259,82 @@
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 768px) {
+  .schemes-page {
+    padding: 0;
+  }
+
+  .tool-form {
+    padding: 16px;
+  }
+
+  .tool-header h2 {
+    font-size: 18px;
+  }
+
+  .tool-description {
+    font-size: 12px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .section-header {
+    font-size: 15px;
+  }
+
+  .btn-find-schemes {
+    font-size: 13px;
+    padding: 10px 20px;
+  }
+
+  .scheme-card {
+    padding: 16px;
+  }
+
+  .scheme-card h4 {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tool-form {
+    padding: 12px;
+  }
+
+  .tool-header h2 {
+    font-size: 16px;
+  }
+
+  .form-section {
+    padding: 12px;
+  }
+
+  .form-field label {
+    font-size: 12px;
+  }
+
+  .form-select,
+  input[type="text"] {
+    font-size: 13px;
+  }
+
+  .btn-find-schemes {
+    width: 100%;
+  }
+
+  .scheme-card {
+    padding: 12px;
+  }
+
+  .scheme-card h4 {
+    font-size: 14px;
+  }
+
+  .scheme-card p {
+    font-size: 12px;
+  }
+}
