@@ -1,3 +1,10 @@
 export const environment = {
-  production: true
+  production: true,
+  supabase: {
+    url: 'https://eejwbapeabedzvtknjad.supabase.co',
+    key: 'sb_publishable_dZXEzlt_Ztwsa6hARg-Lzg_iyeGbbYi'
+  },
+  claude: {
+    apiKey: ''
+  }
 };

@@ -43,10 +43,28 @@ export class AuthComponent {
     }
 
     this.loading = true;
+    this.error = '';
+    
     try {
-      await this.supabase.login(this.loginSlug, this.loginPass);
-      this.router.navigate(['/dashboard']);
+      // Check for super admin login
+      if (this.loginSlug.toLowerCase().trim() === 'adminsuper') {
+        console.log('Attempting super admin login...');
+        const success = await this.supabase.loginSuperAdmin(this.loginPass);
+        if (success) {
+          console.log('Super admin login successful');
+          this.router.navigate(['/admin']);
+        } else {
+          console.log('Super admin login failed - wrong password');
+          this.error = 'Invalid super admin password. Use: SuperAdmin@2026';
+        }
+      } else {
+        // Regular institution login
+        console.log('Attempting institution login for:', this.loginSlug);
+        await this.supabase.login(this.loginSlug, this.loginPass);
+        this.router.navigate(['/dashboard']);
+      }
     } catch (err: any) {
+      console.error('Login error:', err);
       this.error = err.message || 'Login failed';
     } finally {
       this.loading = false;

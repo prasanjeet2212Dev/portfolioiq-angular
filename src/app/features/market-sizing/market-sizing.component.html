@@ -1,0 +1,144 @@
+<div class="market-sizing-page">
+  <div class="warning-banner">
+    <strong>Why this matters:</strong> Founders cite top-down reports. Investors want your <strong>TAM</strong>: bottom-up from actual customers × actual price. This wizard faces that discipline.
+  </div>
+
+  <div class="tool-container">
+    <div class="tool-form">
+      <div class="form-section">
+        <h3 class="section-icon">① Define Customer</h3>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Link to Startup</label>
+            <select [(ngModel)]="linkToStartup" class="form-select">
+              <option value="standalone">Standalone calculation</option>
+              <option value="startup1">Startup 1</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Sector</label>
+            <select class="form-select">
+              <option>Select...</option>
+              <option>AgriTech</option>
+              <option>FinTech</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Customer Type</label>
+            <select [(ngModel)]="customerType" class="form-select">
+              <option value="b2c">B2C — Individual consumers</option>
+              <option value="b2b">B2B — Businesses</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Geography</label>
+            <select [(ngModel)]="geography" class="form-select">
+              <option value="pan-india">Pan- India</option>
+              <option value="state">Specific state</option>
+              <option value="city">Metro city</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-field full-width">
+          <label>Target Customer Description</label>
+          <textarea rows="2" placeholder="e.g. Class 9-12 students in tier  2/3 cities preparing for JEE/NEET"></textarea>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3 class="section-icon">② Size the Universe</h3>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Total Universe in India</label>
+            <input type="text" [(ngModel)]="totalUniverse" placeholder="e.g. 45000000">
+          </div>
+          <div class="form-field">
+            <label>Data Source</label>
+            <select [(ngModel)]="dataSource" class="form-select">
+              <option value="census">Census / MOSPI data</option>
+              <option value="industry">Industry reports</option>
+              <option value="estimate">Estimate</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label>% Digitally reachable</label>
+            <input type="text" [(ngModel)]="digitallyReachable" placeholder="e.g. 30">
+          </div>
+          <div class="form-field">
+            <label>% Willing to pay</label>
+            <input type="text" [(ngModel)]="willingToPay" placeholder="e.g. 20">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3 class="section-icon">③ Pricing & Revenue</h3>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Revenue Model</label>
+            <select [(ngModel)]="revenueModel" class="form-select">
+              <option value="subscription">Subscription (monthly)</option>
+              <option value="one-time">One-time purchase</option>
+              <option value="commission">Commission per transaction</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>ARPU per Year (₹)</label>
+            <input type="text" [(ngModel)]="arpu" placeholder="e.g. 5000">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label>SAM Filter (% of TAM we can serve)</label>
+            <input type="text" [(ngModel)]="samPercentage" placeholder="e.g. 10">
+          </div>
+          <div class="form-field">
+            <label>Year 3 Capture Target (% of SAM)</label>
+            <input type="text" placeholder="e.g. 2">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Founder-Claimed TAM (₹ Cr)</label>
+            <input type="text" [(ngModel)]="founderClaimTam" placeholder="What founder told you">
+          </div>
+          <div class="form-field">
+            <label>Founder-Claimed SAM (₹ Cr)</label>
+            <input type="text" [(ngModel)]="founderClaimSam" placeholder="Founder's SAM">
+          </div>
+        </div>
+      </div>
+
+      <div class="button-row">
+        <button class="btn-calculate" (click)="calculate()">📊 Calculate →</button>
+        <button class="btn-ai-validate" (click)="validateWithAI()">+ AI Validate</button>
+      </div>
+    </div>
+
+    <div class="tool-results">
+      <div class="results-header">Bottom-Up Calculation</div>
+      <div class="results-body">
+        <div class="results-placeholder" *ngIf="!result">
+          Fill in the inputs and click <strong>Calculate →</strong>
+        </div>
+        <div class="results-content" *ngIf="result">
+          <div class="result-metric">
+            <div class="result-label">TAM</div>
+            <div class="result-value">₹{{ result.tam }}</div>
+          </div>
+          <div class="result-metric">
+            <div class="result-label">SAM</div>
+            <div class="result-value">{{ result.sam }}</div>
+          </div>
+          <div class="validation-box">
+            {{ result.validation }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

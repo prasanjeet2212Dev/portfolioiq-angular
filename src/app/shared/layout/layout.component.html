@@ -1,0 +1,81 @@
+<div class="app-container">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <span class="logo-piq">Portfolio</span><span class="logo-suffix">IQ</span>
+      </div>
+      <div class="logo-tagline">INCUBATOR INTELLIGENCE</div>
+    </div>
+
+    <div class="user-info">
+      <div class="user-avatar">●</div>
+      <div class="user-details">
+        <div class="user-name">{{ institution?.name || 'Super Admin' }}</div>
+        <div class="user-role">admin</div>
+      </div>
+    </div>
+
+    <div class="sidebar-section-label">OVERVIEW</div>
+    <nav class="sidebar-nav">
+      <a routerLink="/dashboard" class="nav-item" [class.active]="isActive('/dashboard')">
+        <span class="nav-icon">◆</span>
+        <span class="nav-label">Dashboard</span>
+      </a>
+      <a routerLink="/showcase" class="nav-item" [class.active]="isActive('/showcase')">
+        <span class="nav-icon">⭐</span>
+        <span class="nav-label">Showcase</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-section-label">PORTFOLIO</div>
+    <nav class="sidebar-nav">
+      <a routerLink="/all-startups" class="nav-item" [class.active]="isActive('/all-startups')">
+        <span class="nav-icon">📊</span>
+        <span class="nav-label">All Startups</span>
+      </a>
+      <a routerLink="/add-startup" class="nav-item" [class.active]="isActive('/add-startup')">
+        <span class="nav-icon">+</span>
+        <span class="nav-label">Add Startup</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-section-label">TOOLS</div>
+    <nav class="sidebar-nav">
+      <a routerLink="/market-sizing" class="nav-item" [class.active]="isActive('/market-sizing')">
+        <span class="nav-icon">⊙</span>
+        <span class="nav-label">Market Sizing</span>
+      </a>
+      <a routerLink="/valuation" class="nav-item" [class.active]="isActive('/valuation')">
+        <span class="nav-icon">₹</span>
+        <span class="nav-label">Valuation</span>
+      </a>
+      <a routerLink="/govt-schemes" class="nav-item" [class.active]="isActive('/govt-schemes')">
+        <span class="nav-icon">🏛</span>
+        <span class="nav-label">Govt Schemes</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="footer-item">{{ isSuperAdmin ? 'All Institutions' : 'Portfolio' }}</div>
+      <div class="footer-count">{{ startupCount }} startups</div>
+      <button class="sign-out-btn" (click)="logout()">
+        <span class="sign-out-icon">↪</span>
+        Sign Out
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="content-header">
+      <div class="content-header-date">{{ currentDate | date: 'd MMM YYYY' }}</div>
+      <button class="btn-add-startup" routerLink="/add-startup">
+        <span>+</span> Add Startup
+      </button>
+    </div>
+    <div class="content-body">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

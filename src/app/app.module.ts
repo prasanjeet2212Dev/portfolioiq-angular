@@ -8,6 +8,13 @@ import { AuthComponent } from './features/auth/auth.component';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { StartupDetailComponent } from './features/startup-detail/startup-detail.component';
 import { AddStartupComponent } from './features/add-startup/add-startup.component';
+import { LayoutComponent } from './shared/layout/layout.component';
+import { ValuationComponent } from './features/valuation/valuation.component';
+import { GovtSchemesComponent } from './features/govt-schemes/govt-schemes.component';
+import { AdminComponent } from './features/admin/admin.component';
+import { ShowcaseComponent } from './features/showcase/showcase.component';
+import { AllStartupsComponent } from './features/all-startups/all-startups.component';
+import { MarketSizingComponent } from './features/market-sizing/market-sizing.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +22,14 @@ import { AddStartupComponent } from './features/add-startup/add-startup.componen
     AuthComponent,
     DashboardComponent,
     StartupDetailComponent,
-    AddStartupComponent
+    AddStartupComponent,
+    LayoutComponent,
+    ValuationComponent,
+    GovtSchemesComponent,
+    AdminComponent,
+    ShowcaseComponent,
+    AllStartupsComponent,
+    MarketSizingComponent
   ],
   imports: [
     BrowserModule,

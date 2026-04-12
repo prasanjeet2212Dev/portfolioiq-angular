@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Startup } from '../models';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,8 @@ export class ClaudeAIService {
   }
 
   private restoreAPIKey() {
-    this.apiKey = localStorage.getItem('piq_claude_key') || '';
+    // Use environment config first, fallback to localStorage
+    this.apiKey = environment.claude.apiKey || localStorage.getItem('piq_claude_key') || '';
   }
 
   async analyzeStartup(startup: Startup): Promise<string> {
@@ -86,13 +88,14 @@ Only return the JSON array, no other text.`;
   }
 
   private async callClaude(prompt: string): Promise<string> {
-    // Browser-side API call to Anthropic (client-side to avoid exposing key on backend)
-    // Note: In production, you'd route through a backend auth layer
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    // Use proxy endpoint to avoid CORS issues in development
+    // In production, this should be routed through a proper backend API
+    const response = await fetch('/api/claude', {
       method: 'POST',
       headers: {
         'x-api-key': this.apiKey,
         'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
         'content-type': 'application/json'
       },
       body: JSON.stringify({

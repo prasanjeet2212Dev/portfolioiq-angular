@@ -1,7 +1,7 @@
 <div class="startup-detail" *ngIf="startup">
   <div class="header">
     <button class="btn-back" (click)="goBack()">← Back</button>
-    <h1>{{ startup.data.name }}</h1>
+    <h1>{{ startup.data['name'] }}</h1>
     <div class="header-actions">
       <button class="btn btn-secondary" (click)="showSettings = !showSettings">⚙ AI Settings</button>
       <button class="btn btn-danger" (click)="deleteStartup()">🗑 Delete</button>
@@ -25,27 +25,27 @@
         <div class="info-grid">
           <div class="info-item">
             <label>Sector</label>
-            <strong>{{ startup.data.sector }}</strong>
+            <strong>{{ startup.data['sector'] }}</strong>
           </div>
           <div class="info-item">
             <label>Stage</label>
-            <strong>{{ startup.data.stage }}</strong>
+            <strong>{{ startup.data['stage'] }}</strong>
           </div>
           <div class="info-item">
             <label>City</label>
-            <strong>{{ startup.data.city }}</strong>
+            <strong>{{ startup.data['city'] }}</strong>
           </div>
           <div class="info-item">
             <label>Team Size</label>
-            <strong>{{ startup.data.team_size }}</strong>
+            <strong>{{ startup.data['teamSize'] }}</strong>
           </div>
-          <div class="info-item" *ngIf="startup.data.revenue">
-            <label>Revenue</label>
-            <strong>₹{{ (startup.data.revenue / 1000000).toFixed(1) }}M</strong>
+          <div class="info-item" *ngIf="startup.data['mrr']">
+            <label>MRR</label>
+            <strong>₹{{ startup.data['mrr'] | number }}</strong>
           </div>
-          <div class="info-item" *ngIf="startup.data.runway">
+          <div class="info-item" *ngIf="startup.data['runway']">
             <label>Runway</label>
-            <strong>{{ startup.data.runway }} months</strong>
+            <strong>{{ startup.data['runway'] }} months</strong>
           </div>
         </div>
       </div>
@@ -57,21 +57,21 @@
         </div>
         <div class="score-breakdown">
           <div class="breakdown-item">
-            <span>Revenue Impact</span>
+            <span>MRR Impact</span>
             <div class="bar">
-              <div class="fill" [style.width.%]="(startup.data.revenue ? Math.min(startup.data.revenue / 100000, 100) : 0)"></div>
+              <div class="fill" [style.width.%]="(startup.data['mrr'] ? Math.min(+startup.data['mrr'] / 10000, 100) : 0)"></div>
             </div>
           </div>
           <div class="breakdown-item">
             <span>Growth Rate</span>
             <div class="bar">
-              <div class="fill" [style.width.%]="(startup.data.growth_rate ? startup.data.growth_rate * 1000 : 0)"></div>
+              <div class="fill" [style.width.%]="getGrowthWidth()"></div>
             </div>
           </div>
           <div class="breakdown-item">
             <span>Team Size</span>
             <div class="bar">
-              <div class="fill" [style.width.%]="(startup.data.team_size ? Math.min(startup.data.team_size * 5, 100) : 0)"></div>
+              <div class="fill" [style.width.%]="getTeamSizeWidth()"></div>
             </div>
           </div>
         </div>

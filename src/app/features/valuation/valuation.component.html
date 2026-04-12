@@ -1,0 +1,171 @@
+<div class="valuation-page">
+  <div class="page-title">Valuation Estimator</div>
+
+  <div class="tool-container">
+    <div class="tool-form">
+      <div class="tool-header">
+        <h2>Startup Valuation Estimator</h2>
+        <p class="tool-description">
+          Based on comparable Indian startup deals, sector benchmarks, and stage-specific multiples.<br>
+          <strong>Not a substitute for formal valuation</strong> — a directional estimate to guide conversations.
+        </p>
+      </div>
+
+      <!-- Load from Portfolio -->
+      <div class="form-section">
+        <div class="section-header-inline">
+          <strong>Load from Portfolio</strong> or fill manually below
+        </div>
+        <select class="form-select" (change)="onStartupSelected($event)">
+          <option value="">-- Select a startup from your portfolio</option>
+          <option *ngFor="let startup of startups" [value]="startup.id">
+            {{ startup.data['name'] }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Basic Information -->
+      <div class="form-section">
+        <h3 class="section-header">Basic Information</h3>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Startup Name</label>
+            <input type="text" [(ngModel)]="startupName" placeholder="e.g. FarmLink">
+          </div>
+          <div class="form-field">
+            <label>Sector</label>
+            <select [(ngModel)]="sector" class="form-select">
+              <option *ngFor="let s of sectors" [value]="s">{{ s }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Stage</label>
+            <select [(ngModel)]="stage" class="form-select">
+              <option *ngFor="let st of stages" [value]="st">{{ st }}</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>City / Geography</label>
+            <input type="text" [(ngModel)]="city" placeholder="Metro city (Delhi, Mum…">
+          </div>
+        </div>
+      </div>
+
+      <!-- Revenue & Growth -->
+      <div class="form-section">
+        <h3 class="section-header">Revenue & Growth</h3>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Monthly Revenue (₹) <span class="optional">Optional</span></label>
+            <input type="text" [(ngModel)]="monthlyRevenue" placeholder="e.g. 200000">
+          </div>
+          <div class="form-field">
+            <label>Revenue Growth <span class="optional">Month-on-month</span></label>
+            <select [(ngModel)]="revenueGrowth" class="form-select">
+              <option value="no-revenue">No revenue yet</option>
+              <option value="0-5">0–5%</option>
+              <option value="5-15">5–15%</option>
+              <option value="15-30">15–30%+</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Total Customers / Users</label>
+            <input type="text" [(ngModel)]="totalCustomers" placeholder="e.g. 500">
+          </div>
+          <div class="form-field">
+            <label>Gross Margin <span class="optional">Rough estimate is fine</span></label>
+            <select [(ngModel)]="grossMargin" class="form-select">
+              <option value="unknown">Don't know</option>
+              <option value="negative">Negative / low</option>
+              <option value="20-40">20–40%</option>
+              <option value="40-60">40–60%</option>
+              <option value="60-plus">60%+</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Team & Traction -->
+      <div class="form-section">
+        <h3 class="section-header">Team & Traction</h3>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Founder Background</label>
+            <select [(ngModel)]="founderBackground" class="form-select">
+              <option value="first-time">First-time founders</option>
+              <option value="experienced">Experienced founders</option>
+              <option value="technical">Strong technical team</option>
+              <option value="domain">Domain experts</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Intellectual Property</label>
+            <select [(ngModel)]="intellectualProperty" class="form-select">
+              <option value="none">None</option>
+              <option value="pending">Patent pending</option>
+              <option value="granted">Patent granted</option>
+              <option value="proprietary">Proprietary tech/data</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Funding raised so far (₹)</label>
+            <select [(ngModel)]="fundingRaised" class="form-select">
+              <option value="bootstrapped">0 (bootstrapped)</option>
+              <option value="0-10">₹ 10L – ₹ 50L</option>
+              <option value="50-1cr">₹ 50L – ₹ 1 Cr</option>
+              <option value="1-3cr">₹ 1 Cr – ₹ 3 Cr</option>
+              <option value="3cr+">₹ 3 Cr+</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Current funding round</label>
+            <select [(ngModel)]="currentFundingRound" class="form-select">
+              <option value="pre-seed">Pre-Seed / Bootstrapped</option>
+              <option value="seed">Seed</option>
+              <option value="series-a">Series A</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-field full-width">
+          <label>Key achievements <span class="optional">Pitch, partnerships, awards, government recognition</span></label>
+          <textarea 
+            [(ngModel)]="keyAchievements" 
+            rows="3" 
+            placeholder="e.g. Signed MoU with Bihar govt; 3 enterprise pilots ongoing; won DST grant"></textarea>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <button 
+        class="btn-estimate" 
+        (click)="estimateValuation()"
+        [disabled]="loading">
+        <span class="btn-icon">₹</span>
+        {{ loading ? 'Estimating...' : 'Estimate Valuation' }}
+      </button>
+    </div>
+
+    <!-- Results Panel -->
+    <div class="tool-results">
+      <div class="results-header">Valuation Estimate</div>
+      <div class="results-body">
+        <div class="results-placeholder" *ngIf="!valuationResult && !loading">
+          Fill the form and click <strong>Estimate →</strong>
+        </div>
+        <div class="results-loading" *ngIf="loading">
+          <div class="spinner"></div>
+          <div>Analyzing comparable deals and sector benchmarks...</div>
+        </div>
+        <div class="results-content" *ngIf="valuationResult && !loading">
+          <div class="result-text">{{ valuationResult }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

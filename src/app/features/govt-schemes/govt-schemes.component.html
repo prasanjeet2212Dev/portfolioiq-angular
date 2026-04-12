@@ -1,0 +1,178 @@
+<div class="schemes-page">
+  <div class="page-title">Government Scheme Matcher</div>
+
+  <div class="tool-container">
+    <div class="tool-form">
+      <div class="tool-header">
+        <div class="tool-badge">AI-POWERED TOOL</div>
+        <h2>Government Scheme Matcher</h2>
+        <p class="tool-description">
+          Find all central and state government grants, loans, and recognition programs this startup qualifies for. Most startups miss schemes they're eligible for simply because no one checked.
+        </p>
+      </div>
+
+      <!-- Load from Portfolio -->
+      <div class="form-section">
+        <div class="section-header-inline">
+          <strong>Load from Portfolio</strong> or fill manually
+        </div>
+        <select class="form-select" (change)="onStartupSelected($event)">
+          <option value="">-- Select a startup from your portfolio</option>
+          <option *ngFor="let startup of startups" [value]="startup.id">
+            {{ startup.data['name'] }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Startup Profile -->
+      <div class="form-section">
+        <h3 class="section-header">Startup Profile</h3>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Startup Name</label>
+            <input type="text" [(ngModel)]="startupName" placeholder="e.g. FarmLink">
+          </div>
+          <div class="form-field">
+            <label>Sector</label>
+            <select [(ngModel)]="sector" class="form-select">
+              <option *ngFor="let s of sectors" [value]="s">{{ s }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Stage</label>
+            <select [(ngModel)]="stage" class="form-select">
+              <option *ngFor="let st of stages" [value]="st">{{ st }}</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>State / Location</label>
+            <select [(ngModel)]="state" class="form-select">
+              <option *ngFor="let st of states" [value]="st">{{ st }}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Founder Profile -->
+      <div class="form-section">
+        <h3 class="section-header">Founder Profile</h3>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Founder Category</label>
+            <select [(ngModel)]="founderCategory" class="form-select">
+              <option value="general">General (no special category)</option>
+              <option value="woman">Woman entrepreneur</option>
+              <option value="sc-st">SC/ST founder</option>
+              <option value="student">Student entrepreneur</option>
+              <option value="rural">Rural/semi-urban founder</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Institution type</label>
+            <select [(ngModel)]="institutionType" class="form-select">
+              <option value="private-incubator">Private incubator</option>
+              <option value="govt-incubator">Government incubator</option>
+              <option value="iit-nit">IIT / NIT incubated</option>
+              <option value="atal">Atal Incubation Centre</option>
+              <option value="none">Not incubated</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Current Status -->
+      <div class="form-section">
+        <h3 class="section-header">Current Status</h3>
+        <div class="form-row">
+          <div class="form-field">
+            <label>DPIIT Registration</label>
+            <select [(ngModel)]="dpitRegistration" class="form-select">
+              <option value="yes">Yes - DPIIT recognized</option>
+              <option value="no">No</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Company Registration</label>
+            <select [(ngModel)]="companyRegistration" class="form-select">
+              <option value="pvt-ltd">Pvt Ltd / OPC</option>
+              <option value="llp">LLP</option>
+              <option value="partnership">Partnership</option>
+              <option value="proprietorship">Proprietorship</option>
+              <option value="none">Not registered yet</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Annual Revenue</label>
+            <select [(ngModel)]="annualRevenue" class="form-select">
+              <option value="no-revenue">No revenue yet</option>
+              <option value="under-10l">Under ₹10L</option>
+              <option value="10-50l">₹10L – ₹50L</option>
+              <option value="50l-1cr">₹50L – ₹1 Cr</option>
+              <option value="1-10cr">₹1 Cr – ₹10 Cr</option>
+              <option value="over-10cr">Over ₹10 Cr</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Tech / Innovation focus</label>
+            <select [(ngModel)]="techInnovation" class="form-select">
+              <option value="yes">Yes - technology-driven</option>
+              <option value="deep-tech">Deep tech / R&D heavy</option>
+              <option value="no">No - non-tech business</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Social / Rural Impact</label>
+            <select [(ngModel)]="socialRuralImpact" class="form-select">
+              <option value="yes">Yes - serves rural/low-income</option>
+              <option value="no">No</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Grants already received</label>
+            <select [(ngModel)]="grantsReceived" class="form-select">
+              <option value="none">None so far</option>
+              <option value="some">Some grants received</option>
+              <option value="multiple">Multiple grants</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <button 
+        class="btn-find-schemes" 
+        (click)="findSchemes()"
+        [disabled]="loading">
+        <span class="btn-icon">🔍</span>
+        {{ loading ? 'Searching...' : 'Find Matching Schemes' }}
+      </button>
+    </div>
+
+    <!-- Results Panel -->
+    <div class="tool-results">
+      <div class="results-header">Matched Schemes</div>
+      <div class="results-body">
+        <div class="results-placeholder" *ngIf="matchedSchemes.length === 0 && !loading">
+          Fill the profile and click <strong>Find →</strong>
+        </div>
+        <div class="results-loading" *ngIf="loading">
+          <div class="spinner"></div>
+          <div>Scanning central & state government databases...</div>
+        </div>
+        <div class="results-content" *ngIf="matchedSchemes.length > 0 && !loading">
+          <div class="scheme-card" *ngFor="let scheme of matchedSchemes">
+            <div class="scheme-name">{{ scheme.name }}</div>
+            <div class="scheme-description">{{ scheme.description }}</div>
+            <a *ngIf="scheme.url" [href]="scheme.url" target="_blank" class="scheme-link">Learn more →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
