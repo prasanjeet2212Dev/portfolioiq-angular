@@ -19,6 +19,7 @@ export class StartupDetailComponent implements OnInit {
   showSettings = false;
   apiKey = '';
   Math = Math;
+  parseFloat = parseFloat;
 
   constructor(
     private route: ActivatedRoute,
@@ -34,14 +35,27 @@ export class StartupDetailComponent implements OnInit {
     this.loadStartup(id);
   }
 
-  private loadStartup(id: number) {
-    this.supabase.getStartups().subscribe(startups => {
-      this.startup = startups.find(s => s.id === id) || null;
+  private async loadStartup(id: number) {
+    const isSuperAdmin = this.supabase.getSuperAdminStatus();
+    
+    if (isSuperAdmin) {
+      // Super admin: fetch all startups
+      const allStartups = await this.supabase.getAllStartupsAcrossInstitutions();
+      this.startup = allStartups.find(s => s.id === id) || null;
       if (this.startup) {
         this.scores = this.scoring.calculateScores(this.startup.data);
         this.loadInsight(id);
       }
-    });
+    } else {
+      // Regular institution
+      this.supabase.getStartups().subscribe(startups => {
+        this.startup = startups.find(s => s.id === id) || null;
+        if (this.startup) {
+          this.scores = this.scoring.calculateScores(this.startup.data);
+          this.loadInsight(id);
+        }
+      });
+    }
   }
 
   private loadInsight(startupId: number) {
@@ -154,5 +168,17 @@ export class StartupDetailComponent implements OnInit {
     if (score >= 60) return 'score-good';
     if (score >= 45) return 'score-fair';
     return 'score-poor';
+  }
+
+  getGrowthWidth(): number {
+    if (!this.startup || !this.startup.data['growthRate']) return 0;
+    const growth = parseFloat(this.startup.data['growthRate'] as any) || 0;
+    return Math.min(growth, 100);
+  }
+
+  getTeamSizeWidth(): number {
+    if (!this.startup || !this.startup.data['teamSize']) return 0;
+    const teamSize = parseInt(this.startup.data['teamSize'] as any, 10) || 0;
+    return Math.min(teamSize * 5, 100);
   }
 }

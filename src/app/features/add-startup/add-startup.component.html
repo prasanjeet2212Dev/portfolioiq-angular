@@ -1,82 +1,449 @@
-<div class="add-startup">
-  <div class="header">
-    <button class="btn-back" (click)="goBack()">← Back to Dashboard</button>
-    <h1>Add New Startup</h1>
+<div class="add-startup-page">
+  <!-- Stage Selector -->
+  <div class="stage-selector">
+    <div class="stage-header">FIRST, WHAT STAGE IS THIS STARTUP AT?</div>
+    <div class="stage-options">
+      <button 
+        class="stage-option" 
+        [class.selected]="selectedStage === 'idea'"
+        (click)="selectStage('idea')">
+        <span class="stage-icon">💡</span>
+        <span class="stage-label">Idea — Still figuring out the problem</span>
+      </button>
+      <button 
+        class="stage-option" 
+        [class.selected]="selectedStage === 'prototype'"
+        (click)="selectStage('prototype')">
+        <span class="stage-icon">🔧</span>
+        <span class="stage-label">Prototype — Built something basic</span>
+      </button>
+      <button 
+        class="stage-option" 
+        [class.selected]="selectedStage === 'mvp'"
+        (click)="selectStage('mvp')">
+        <span class="stage-icon">📱</span>
+        <span class="stage-label">MVP — Has real users or customers</span>
+      </button>
+      <button 
+        class="stage-option" 
+        [class.selected]="selectedStage === 'growth'"
+        (click)="selectStage('growth')">
+        <span class="stage-icon">📈</span>
+        <span class="stage-label">Growth — Growing revenue</span>
+      </button>
+      <button 
+        class="stage-option" 
+        [class.selected]="selectedStage === 'scale'"
+        (click)="selectStage('scale')">
+        <span class="stage-icon">🚀</span>
+        <span class="stage-label">Scale — Scaling up fast</span>
+      </button>
+    </div>
   </div>
 
-  <div class="form-container">
-    <form (ngSubmit)="addStartup()">
-      <div class="form-section">
-        <h2>Basic Information</h2>
-
-        <div class="form-group">
+  <!-- Form Sections -->
+  <div class="form-sections">
+    <!-- About the Startup -->
+    <div class="section-card" [class.expanded]="sections.about">
+      <div class="section-header" (click)="toggleSection('about')">
+        <span class="section-icon">👤</span>
+        <span class="section-title">About the Startup</span>
+        <span class="section-toggle">{{ sections.about ? '−' : '+' }}</span>
+      </div>
+      <div class="section-body" *ngIf="sections.about">
+        <div class="form-field">
           <label>Startup Name *</label>
-          <input type="text" [(ngModel)]="name" name="name" placeholder="e.g. KrishiSetu" required>
+          <input type="text" [(ngModel)]="name" placeholder="What is the startup called?">
         </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label>Sector *</label>
-            <input type="text" [(ngModel)]="sector" name="sector" placeholder="e.g. AgriTech" required>
-          </div>
-          <div class="form-group">
-            <label>City *</label>
-            <input type="text" [(ngModel)]="city" name="city" placeholder="e.g. Durgapur" required>
-          </div>
+        <div class="form-field">
+          <label>What do they do? <span class="optional">One simple sentence</span></label>
+          <textarea [(ngModel)]="whatTheyDo" rows="2" placeholder="e.g. We help farmers sell vegetables directly to consumers using WhatsApp"></textarea>
         </div>
-
+        <div class="form-field">
+          <label>What problem are they solving? <span class="optional">In plain words</span></label>
+          <textarea [(ngModel)]="problemSolving" rows="3" placeholder="e.g. Small farmers in Bihar get only 20% of the price consumers pay, because of too many middlemen"></textarea>
+        </div>
         <div class="form-row">
-          <div class="form-group">
-            <label>Stage</label>
-            <select [(ngModel)]="stage" name="stage">
-              <option value="pre-seed">Pre-Seed</option>
-              <option value="seed">Seed</option>
-              <option value="series-a">Series A</option>
-              <option value="series-b">Series B</option>
-              <option value="series-c">Series C+</option>
+          <div class="form-field">
+            <label>Sector</label>
+            <select [(ngModel)]="sector">
+              <option value="">Select closest fit...</option>
+              <option>AgriTech</option>
+              <option>FinTech</option>
+              <option>EdTech</option>
+              <option>HealthTech</option>
+              <option>E-Commerce</option>
+              <option>SaaS</option>
+              <option>CleanTech</option>
+              <option>Other</option>
             </select>
           </div>
-          <div class="form-group">
+          <div class="form-field">
+            <label>Target Customer</label>
+            <select [(ngModel)]="targetCustomer">
+              <option value="">Who do they sell to?</option>
+              <option>B2C — Individual consumers</option>
+              <option>B2B — Businesses</option>
+              <option>B2G — Government</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Founder Name(s)</label>
+            <input type="text" [(ngModel)]="founderNames" placeholder="e.g. Ravi Kumar, Priya Sharma">
+          </div>
+          <div class="form-field">
+            <label>Founder Background <span class="optional">Optional</span></label>
+            <input type="text" [(ngModel)]="founderBackground" placeholder="e.g. IIT Delhi, 5 yrs in agriculture">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label>City / Location</label>
+            <input type="text" [(ngModel)]="city" placeholder="e.g. Patna">
+          </div>
+          <div class="form-field">
+            <label>Year Started</label>
+            <select [(ngModel)]="yearStarted">
+              <option value="">Select year...</option>
+              <option>2024</option>
+              <option>2023</option>
+              <option>2022</option>
+              <option>2021</option>
+              <option>2020</option>
+              <option>Earlier</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Website / App Link <span class="optional">Optional</span></label>
+            <input type="text" [(ngModel)]="website" placeholder="e.g. farmlink.in">
+          </div>
+          <div class="form-field">
             <label>Team Size</label>
-            <input type="number" [(ngModel)]="teamSize" name="teamSize" placeholder="0">
+            <select [(ngModel)]="teamSize">
+              <option value="">How many people?</option>
+              <option>1-2</option>
+              <option>3-5</option>
+              <option>6-10</option>
+              <option>11-20</option>
+              <option>20+</option>
+            </select>
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="form-section">
-        <h2>Financial Metrics</h2>
-
+    <!-- Progress & Traction -->
+    <div class="section-card" [class.expanded]="sections.progress">
+      <div class="section-header" (click)="toggleSection('progress')">
+        <span class="section-icon">📊</span>
+        <span class="section-title">Progress & Traction</span>
+        <span class="section-toggle">{{ sections.progress ? '−' : '+' }}</span>
+      </div>
+      <div class="section-body" *ngIf="sections.progress">
         <div class="form-row">
-          <div class="form-group">
-            <label>Annual Revenue (₹)</label>
-            <input type="number" [(ngModel)]="revenue" name="revenue" placeholder="0">
+          <div class="form-field">
+            <label>Monthly Revenue (MRR)</label>
+            <input type="text" [(ngModel)]="mrr" placeholder="₹ 0">
           </div>
-          <div class="form-group">
-            <label>MRR (₹)</label>
-            <input type="number" [(ngModel)]="mrr" name="mrr" placeholder="0">
+          <div class="form-field">
+            <label>Growth Rate <span class="optional">Month-on-month</span></label>
+            <input type="text" [(ngModel)]="growthRate" placeholder="e.g. 15%">
           </div>
         </div>
-
         <div class="form-row">
-          <div class="form-group">
-            <label>Runway (months)</label>
-            <input type="number" [(ngModel)]="runway" name="runway" placeholder="0">
+          <div class="form-field">
+            <label>Runway</label>
+            <input type="text" [(ngModel)]="runway" placeholder="How many months?">
           </div>
-          <div class="form-group">
-            <label>Growth Rate (monthly %)</label>
-            <input type="number" [(ngModel)]="growthRate" name="growthRate" placeholder="0" step="0.01">
+          <div class="form-field">
+            <label>Annual Revenue</label>
+            <input type="text" [(ngModel)]="revenue" placeholder="₹ 0">
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="form-actions">
-        <button type="button" class="btn btn-secondary" (click)="goBack()">Cancel</button>
-        <button type="submit" class="btn btn-gold" [disabled]="loading">
-          {{ loading ? 'Adding...' : 'Add Startup →' }}
-        </button>
+    <!-- Funding -->
+    <div class="section-card" [class.expanded]="sections.funding">
+      <div class="section-header" (click)="toggleSection('funding')">
+        <span class="section-icon">💰</span>
+        <span class="section-title">Funding</span>
+        <span class="section-toggle">{{ sections.funding ? '−' : '+' }}</span>
       </div>
+      <div class="section-body" *ngIf="sections.funding">
+        <div class="form-row">
+          <div class="form-field">
+            <label>Have they raised money?</label>
+            <select [(ngModel)]="fundsRaisedSoFar">
+              <option value="">Select...</option>
+              <option>Nothing yet</option>
+              <option>Friends & Family</option>
+              <option>Pre-Seed</option>
+              <option>Seed</option>
+              <option>Series A+</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Total amount raised <span class="optional">Approx is fine</span></label>
+            <select [(ngModel)]="totalAmountRaised">
+              <option value="">Nothing yet</option>
+              <option>Under ₹10L</option>
+              <option>₹10L - ₹50L</option>
+              <option>₹50L - ₹1Cr</option>
+              <option>₹1Cr - ₹3Cr</option>
+              <option>₹3Cr+</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Are they currently raising?</label>
+            <select [(ngModel)]="currentlyRaising">
+              <option value="">Select...</option>
+              <option>Yes</option>
+              <option>No</option>
+              <option>Planning to</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Target amount to raise <span class="optional">If raising</span></label>
+            <select [(ngModel)]="targetAmountToRaise">
+              <option value="">Not raising / don't know</option>
+              <option>Under ₹50L</option>
+              <option>₹50L - ₹1Cr</option>
+              <option>₹1Cr - ₹3Cr</option>
+              <option>₹3Cr - ₹5Cr</option>
+              <option>₹5Cr+</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
 
-      <div class="error" *ngIf="error">{{ error }}</div>
-    </form>
+    <!-- Market -->
+    <div class="section-card" [class.expanded]="sections.market">
+      <div class="section-header" (click)="toggleSection('market')">
+        <span class="section-icon">🌍</span>
+        <span class="section-title">Market</span>
+        <span class="section-toggle">{{ sections.market ? '−' : '+' }}</span>
+      </div>
+      <div class="section-body" *ngIf="sections.market">
+        <div class="form-row">
+          <div class="form-field">
+            <label>How big is the opportunity? <span class="optional">Your honest estimate</span></label>
+            <select [(ngModel)]="marketOpportunity">
+              <option value="">Select...</option>
+              <option>Niche (under ₹100Cr TAM)</option>
+              <option>Mid-market (₹100Cr - ₹1000Cr)</option>
+              <option>Large (₹1000Cr+)</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Who are the main competitors?</label>
+            <input type="text" [(ngModel)]="mainCompetitors" placeholder="e.g. BigBasket, local mandis, no direct competitor yet">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label>What makes them different? <span class="optional">Their edge</span></label>
+            <select [(ngModel)]="mainAdvantage">
+              <option value="">Select main advantage...</option>
+              <option>Price advantage</option>
+              <option>Better tech/product</option>
+              <option>Network effects</option>
+              <option>Domain expertise</option>
+              <option>Government/regulatory advantage</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Geography Focus</label>
+            <select [(ngModel)]="geographyFocus">
+              <option value="">Select...</option>
+              <option>Pan-India</option>
+              <option>Specific state</option>
+              <option>Metro cities</option>
+              <option>Tier 2/3 cities</option>
+              <option>Rural focus</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Program Manager Assessment -->
+    <div class="section-card" [class.expanded]="sections.assessment">
+      <div class="section-header" (click)="toggleSection('assessment')">
+        <span class="section-icon">📋</span>
+        <span class="section-title">Program Manager Assessment — <span class="optional">Filled by your team, not the founder</span></span>
+        <span class="section-toggle">{{ sections.assessment ? '−' : '+' }}</span>
+      </div>
+      <div class="section-body" *ngIf="sections.assessment">
+        <div class="form-row">
+          <div class="form-field">
+            <label>Cohort / Batch</label>
+            <input type="text" [(ngModel)]="cohortBatch" placeholder="e.g. Cohort 7, 2024">
+          </div>
+          <div class="form-field">
+            <label>Program type</label>
+            <select [(ngModel)]="programType">
+              <option value="">Select...</option>
+              <option>Full incubation</option>
+              <option>Acceleration</option>
+              <option>Mentorship only</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Priority Level <span class="optional">How much attention does the startup need?</span></label>
+            <select [(ngModel)]="priorityLevel">
+              <option value="">Select...</option>
+              <option>High - needs urgent help</option>
+              <option>Medium - regular check-ins</option>
+              <option>Low - self-sufficient</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Next Review Date</label>
+            <input type="date" [(ngModel)]="nextReviewDate">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Mentor Domain Needed</label>
+            <select [(ngModel)]="mentorDomainNeeded">
+              <option value="">Select...</option>
+              <option>Product/Tech</option>
+              <option>Sales/Marketing</option>
+              <option>Fundraising</option>
+              <option>Operations</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>AI Tasks to Run <span class="optional">What analysis does this startup need?</span></label>
+            <select>
+              <option value="">Select...</option>
+              <option>Market sizing validation</option>
+              <option>Competitive analysis</option>
+              <option>Investment readiness check</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-field">
+          <label>Key Action This Month <span class="optional">What is your team doing for this startup?</span></label>
+          <textarea [(ngModel)]="keyActionThisMonth" rows="2" placeholder="e.g. Intro to NABARD officer for pilot, guide DPIIT registration, connect with techbiz mentor Rajesh Shah"></textarea>
+        </div>
+        <div class="form-field">
+          <label>Internal PM Notes <span class="optional">Not visible to founders — your internal assessment</span></label>
+          <textarea [(ngModel)]="internalNotes" rows="3" placeholder="e.g. Founder is technically strong but avoids sales conversations. Needs push. Runway is 4 months — escalate to program head."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Government Scheme Eligibility -->
+    <div class="section-card" [class.expanded]="sections.govtSchemes">
+      <div class="section-header" (click)="toggleSection('govtSchemes')">
+        <span class="section-icon">🏛</span>
+        <span class="section-title">Government Scheme Eligibility</span>
+        <span class="section-toggle">{{ sections.govtSchemes ? '−' : '+' }}</span>
+      </div>
+      <div class="section-body" *ngIf="sections.govtSchemes">
+        <div class="form-row">
+          <div class="form-field">
+            <label>DPIIT Startup India Recognition</label>
+            <select [(ngModel)]="dpitRecognition">
+              <option value="">Select...</option>
+              <option>Yes - DPIIT recognized</option>
+              <option>No</option>
+              <option>Applied, pending</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Any government grants received?</label>
+            <select [(ngModel)]="grantsReceived">
+              <option value="">Select...</option>
+              <option>None</option>
+              <option>DST/DBT grant</option>
+              <option>State government grant</option>
+              <option>Multiple grants</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Woman / SC / ST founder?</label>
+            <select [(ngModel)]="womanFounder">
+              <option value="">Select...</option>
+              <option>Woman entrepreneur</option>
+              <option>SC/ST founder</option>
+              <option>None</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Any patents or IP?</label>
+            <select [(ngModel)]="patents">
+              <option value="">None</option>
+              <option>Patent pending</option>
+              <option>Patent granted</option>
+              <option>Trade secret / proprietary tech</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Current Status Note -->
+    <div class="section-card" [class.expanded]="sections.statusNote">
+      <div class="section-header" (click)="toggleSection('statusNote')">
+        <span class="section-icon">📝</span>
+        <span class="section-title">Current Status Note <span class="optional">(Program Manager fills this)</span></span>
+        <span class="section-toggle">{{ sections.statusNote ? '−' : '+' }}</span>
+      </div>
+      <div class="section-body" *ngIf="sections.statusNote">
+        <div class="form-field">
+          <label>Key milestones achieved so far</label>
+          <textarea [(ngModel)]="statusNote" rows="3" placeholder="e.g. Got first 10 paying customers in April; signed MoU with Bihar govt; hired CTO"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Overall health of this startup</label>
+            <select [(ngModel)]="overallHealth">
+              <option value="">Select...</option>
+              <option>Thriving - on track</option>
+              <option>Stable - progressing</option>
+              <option>Struggling - needs help</option>
+              <option>At risk - critical issues</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Engagement with incubator</label>
+            <select [(ngModel)]="engagementWithIncubator">
+              <option value="">Select...</option>
+              <option>Highly engaged</option>
+              <option>Moderate - responds when needed</option>
+              <option>Low - difficult to reach</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-field">
+          <label>Program manager notes <span class="optional">Internal only</span></label>
+          <textarea [(ngModel)]="programManagerNotes" rows="3" placeholder="e.g. Founder is strong technically but needs help with sales. Recommend connecting with mentor Rajesh Sharma."></textarea>
+        </div>
+      </div>
+    </div>
   </div>
+
+  <!-- Action Buttons -->
+  <div class="form-actions">
+    <button type="button" class="btn-reset" (click)="reset()">Reset</button>
+    <button type="button" class="btn-save" (click)="addStartup()" [disabled]="loading">
+      {{ loading ? 'Saving...' : 'Save Startup →' }}
+    </button>
+  </div>
+
+  <div class="error-message" *ngIf="error">{{ error }}</div>
 </div>

@@ -1,87 +1,121 @@
-<div class="dashboard">
-  <div class="dashboard-header">
-    <div>
-      <h1>Dashboard</h1>
-      <p class="subtitle">{{ institution?.name }}</p>
-    </div>
-    <button class="btn btn-secondary" (click)="logout()">↪ Sign Out</button>
-  </div>
-
-  <div class="kpi-grid" *ngIf="!loading">
-    <div class="kpi-card">
-      <div class="kpi-label">Total Startups</div>
-      <div class="kpi-value">{{ stats.total }}</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Avg IR Score</div>
-      <div class="kpi-value" [ngClass]="'score-' + (stats.avgScore >= 70 ? 'excellent' : stats.avgScore >= 60 ? 'good' : stats.avgScore >= 45 ? 'fair' : 'poor')">
-        {{ stats.avgScore }}
+<div class="dashboard-page">
+  <div class="dash-grid">
+    <!-- KPI Cards -->
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-label">PORTFOLIO MRR</div>
+        <div class="kpi-value">₹0</div>
+        <div class="kpi-sub">1 companies</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">TOTAL FUNDING RAISED</div>
+        <div class="kpi-value">₹0</div>
+        <div class="kpi-sub">Across all portfolio</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">AVG INVESTMENT READINESS</div>
+        <div class="kpi-value score-poor">3/100</div>
+        <div class="kpi-sub">Portfolio health</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">AVG RUNWAY</div>
+        <div class="kpi-value score-critical">0mo</div>
+        <div class="kpi-sub">1 critical</div>
       </div>
     </div>
-    <div class="kpi-card warning" *ngIf="stats.highRisk > 0">
-      <div class="kpi-label">🚨 Runway Risk</div>
-      <div class="kpi-value">{{ stats.highRisk }} startups</div>
-    </div>
-    <div class="kpi-card success">
-      <div class="kpi-label">✓ Above Target (70+)</div>
-      <div class="kpi-value">{{ stats.aboveTarget }}</div>
-    </div>
-  </div>
 
-  <!-- Stage Distribution -->
-  <div class="section card">
-    <h2>Portfolio by Stage</h2>
-    <div class="stage-grid">
-      <div class="stage-item" *ngFor="let stage of (stageDistribution | keyvalue)">
-        <div class="stage-bar" [style.width.%]="(stage.value / stats.total * 100) || 0"></div>
-        <div class="stage-label">{{ stage.key }}</div>
-        <div class="stage-count">{{ stage.value }}</div>
+    <!-- Stage Distribution -->
+    <div class="chart-card">
+      <h3>Stage Distribution</h3>
+      <div class="stage-bars">
+        <div class="stage-row">
+          <div class="stage-label">Idea</div>
+          <div class="stage-bar-bg">
+            <div class="stage-bar-fill" style="width: 100%"></div>
+          </div>
+          <div class="stage-count">1</div>
+        </div>
+        <div class="stage-row">
+          <div class="stage-label">Prototype</div>
+          <div class="stage-bar-bg">
+            <div class="stage-bar-fill" style="width: 0%"></div>
+          </div>
+          <div class="stage-count">0</div>
+        </div>
+        <div class="stage-row">
+          <div class="stage-label">MVP</div>
+          <div class="stage-bar-bg">
+            <div class="stage-bar-fill" style="width: 0%"></div>
+          </div>
+          <div class="stage-count">0</div>
+        </div>
+        <div class="stage-row">
+          <div class="stage-label">Growth</div>
+          <div class="stage-bar-bg">
+            <div class="stage-bar-fill" style="width: 0%"></div>
+          </div>
+          <div class="stage-count">0</div>
+        </div>
+        <div class="stage-row">
+          <div class="stage-label">Scale</div>
+          <div class="stage-bar-bg">
+            <div class="stage-bar-fill" style="width: 0%"></div>
+          </div>
+          <div class="stage-count">0</div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- Startups List -->
-  <div class="section card">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-      <h2>Startups</h2>
-      <button class="btn btn-gold" (click)="addStartup()">+ Add Startup</button>
+    <!-- Sector Breakdown -->
+    <div class="chart-card">
+      <h3>Sector Breakdown</h3>
+      <div class="stage-bars">
+        <div class="stage-row">
+          <div class="stage-label">AgriTech</div>
+          <div class="stage-bar-bg">
+            <div class="stage-bar-fill" style="width: 100%"></div>
+          </div>
+          <div class="stage-count">1</div>
+        </div>
+      </div>
     </div>
 
-    <div class="startups-grid" *ngIf="startups.length > 0">
-      <div class="startup-card" *ngFor="let startup of startups" (click)="viewStartup(startup.id)">
-        <div class="startup-header">
-          <div>
-            <h3>{{ startup.data.name }}</h3>
-            <p class="startup-sector">{{ startup.data.sector }}</p>
+    <!-- Investment Readiness -->
+    <div class="list-card">
+      <div class="card-header">
+        <h3>Investment Readiness</h3>
+        <span class="badge badge-warning">Top 5</span>
+      </div>
+      <div class="startup-list">
+        <div class="startup-item">
+          <div class="startup-rank">#1</div>
+          <div class="startup-info">
+            <div class="startup-name">KrishiSetu</div>
+            <div class="startup-meta">AgriTech · Idea</div>
           </div>
-          <div class="score-badge" [ngClass]="getScoreColor(startup.score || 0)">
-            {{ startup.score || 0 }}
-          </div>
+          <div class="startup-score score-poor">3</div>
         </div>
+      </div>
+    </div>
 
-        <div class="startup-meta">
-          <span class="meta-item">📊 {{ startup.data.stage }}</span>
-          <span class="meta-item" *ngIf="startup.data.revenue">₹ {{ (startup.data.revenue / 1000000).toFixed(1) }}M</span>
-          <span class="meta-item" *ngIf="startup.data.runway" [ngClass]="startup.status">
-            ⏱️ {{ startup.data.runway }}m runway
-          </span>
-        </div>
-
-        <div class="startup-scores">
-          <div class="score-bar">
-            <label>IR</label>
-            <div class="bar-bg">
-              <div class="bar-fill" [style.width.%]="startup.ir_score || 0"></div>
+    <!-- Needs Attention -->
+    <div class="list-card">
+      <div class="card-header">
+        <h3>Needs Attention</h3>
+        <span class="badge badge-danger">Action Required</span>
+      </div>
+      <div class="startup-list">
+        <div class="startup-item">
+          <div class="startup-info">
+            <div class="startup-name">KrishiSetu</div>
+            <div class="startup-tags">
+              <span class="tag tag-critical">Critical runway</span>
+              <span class="tag tag-warning">Market potential</span>
             </div>
-            <span>{{ startup.ir_score || 0 }}</span>
           </div>
+          <a href="#" class="link-view">View</a>
         </div>
       </div>
-    </div>
-
-    <div class="empty-state" *ngIf="startups.length === 0 && !loading">
-      <p>No startups added yet. Create your first portfolio entry.</p>
-      <button class="btn btn-gold" (click)="addStartup()">Add Your First Startup</button>
     </div>
   </div>
 </div>

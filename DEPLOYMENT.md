@@ -22,8 +22,8 @@
 ### First Login
 1. Go to https://iq-portfolios.netlify.app
 2. **Sign In:**
-   - Institution Code: `test`
-   - Passcode: `test123`
+   - Institution Code: `tesla`
+   - Passcode: `test1234`
 3. Or **Register** a new institution
 
 ### Add Claude API Key

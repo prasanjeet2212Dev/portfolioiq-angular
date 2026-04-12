@@ -1,0 +1,170 @@
+.showcase-page {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.showcase-header {
+  margin-bottom: 32px;
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.header-subtitle {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #999;
+}
+
+.btn-export {
+  padding: 8px 16px;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  color: #666;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-export:hover {
+  background: #f8f8f8;
+  border-color: #ccc;
+}
+
+.showcase-header h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #2d2d2d;
+  margin: 0 0 8px 0;
+}
+
+.portfolio-meta {
+  font-size: 14px;
+  color: #666;
+}
+
+.startup-showcase-card {
+  background: white;
+  padding: 32px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 2px solid #f0f0f0;
+}
+
+.showcase-rank {
+  font-size: 48px;
+  font-weight: 800;
+  color: #e0e0e0;
+  margin-bottom: 16px;
+}
+
+.showcase-content h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #2d2d2d;
+  margin: 0 0 8px 0;
+}
+
+.showcase-tagline {
+  font-size: 14px;
+  color: #999;
+  margin: 0 0 32px 0;
+}
+
+.showcase-scores {
+  display: flex;
+  gap: 40px;
+  margin-bottom: 32px;
+  justify-content: center;
+}
+
+.score-circle {
+  text-align: center;
+}
+
+.circle-chart {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px;
+  border: 4px solid #e0e0e0;
+  position: relative;
+}
+
+.circle-chart.score-poor {
+  border-color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.05);
+}
+
+.circle-chart.score-fair {
+  border-color: #ffa726;
+  background: rgba(255, 167, 38, 0.05);
+}
+
+.circle-text {
+  font-size: 24px;
+  font-weight: 700;
+  color: #2d2d2d;
+}
+
+.score-label {
+  font-size: 12px;
+  color: #666;
+  font-weight: 500;
+}
+
+.showcase-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  padding: 24px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+.metric-item {
+  text-align: center;
+}
+
+.metric-label {
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.metric-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #2d2d2d;
+}
+
+.btn-full-detail {
+  width: 100%;
+  padding: 12px 24px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-full-detail:hover {
+  background: #5568d3;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}

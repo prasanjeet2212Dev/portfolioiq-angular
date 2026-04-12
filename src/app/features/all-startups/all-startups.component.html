@@ -1,0 +1,87 @@
+<div class="all-startups-page">
+  <div class="page-controls">
+    <div class="search-box">
+      <input 
+        type="text" 
+        placeholder="Search name, sector, founder..." 
+        class="search-input"
+        [(ngModel)]="searchQuery"
+        (input)="onSearchChange()">
+    </div>
+    <div class="filter-row">
+      <select [(ngModel)]="selectedStage" class="filter-select" (change)="onFilterChange()">
+        <option value="all">All Stages</option>
+        <option value="idea">Idea</option>
+        <option value="prototype">Prototype</option>
+        <option value="mvp">MVP</option>
+        <option value="growth">Growth</option>
+        <option value="scale">Scale</option>
+      </select>
+      <select [(ngModel)]="selectedSector" class="filter-select" (change)="onFilterChange()">
+        <option value="all">All Sectors</option>
+        <option value="agritech">AgriTech</option>
+        <option value="fintech">FinTech</option>
+        <option value="edtech">EdTech</option>
+        <option value="healthtech">HealthTech</option>
+        <option value="saas">SaaS</option>
+        <option value="ecommerce">E-Commerce</option>
+      </select>
+      <select [(ngModel)]="selectedScore" class="filter-select" (change)="onFilterChange()">
+        <option value="all">IR Score</option>
+        <option value="high">70+ (High)</option>
+        <option value="medium">40-70 (Medium)</option>
+        <option value="low"><40 (Low)</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="loading-state" *ngIf="loading">
+    <p>Loading startups...</p>
+  </div>
+
+  <div class="empty-state" *ngIf="!loading && filteredStartups.length === 0 && allStartups.length === 0">
+    <p>No startups found. <a routerLink="/add-startup">Add your first startup</a>.</p>
+  </div>
+
+  <div class="empty-state" *ngIf="!loading && filteredStartups.length === 0 && allStartups.length > 0">
+    <p>Found {{ allStartups.length }} startups, but they were filtered out.</p>
+    <p>Debug: All startups data: <code>{{ allStartups | json }}</code></p>
+    <p>Selected filters - Stage: {{ selectedStage }}, Sector: {{ selectedSector }}</p>
+    <p><strong>Check your browser console (F12) for detailed filter logs.</strong></p>
+  </div>
+
+  <div class="startups-grid" *ngIf="!loading && filteredStartups.length > 0">
+    <div class="startup-card-compact" *ngFor="let startup of filteredStartups">
+      <div class="card-header-row">
+        <div>
+          <h3>{{ startup.data['name'] || 'Unnamed Startup' }}</h3>
+          <p class="card-tagline">{{ startup.data['whatTheyDo'] || startup.data['problemSolving'] || 'No description available' }}</p>
+        </div>
+      </div>
+      <div class="card-tags">
+        <span class="tag" *ngIf="startup.data['sector']">{{ startup.data['sector'] }}</span>
+        <span class="tag" *ngIf="startup.data['stage']">{{ startup.data['stage'] | titlecase }}</span>
+        <span class="tag" *ngIf="startup.data['city']">📍 {{ startup.data['city'] }}</span>
+      </div>
+      <div class="card-metrics">
+        <div class="metric">
+          <div class="metric-label">MRR</div>
+          <div class="metric-value">₹{{ startup.data['mrr'] || 0 | number }}</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">RUNWAY</div>
+          <div class="metric-value">{{ startup.data['runway'] || 0 }}mo</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">TEAM SIZE</div>
+          <div class="metric-value">{{ startup.data['teamSize'] || 0 }}</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">IR SCORE</div>
+          <div class="metric-value" [ngClass]="getScoreClass(getIRScore(startup))">{{ getIRScore(startup) }}</div>
+        </div>
+      </div>
+      <button class="btn-view-startup" (click)="viewStartup(startup)">View Details →</button>
+    </div>
+  </div>
+</div>

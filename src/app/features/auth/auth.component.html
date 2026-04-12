@@ -1,5 +1,5 @@
 <div class="auth-screen">
-  <div class="auth-container">
+  <div class="auth-card">
     <!-- Brand Panel -->
     <div class="auth-brand-panel">
       <div>
@@ -33,12 +33,12 @@
           <div class="feat-icon">🏛</div>
           <div class="feat-text">
             <strong>Multi-Institution</strong>
-            <span>Each incubator gets a completely private, isolated workspace. Your portfolio is never visible to others.</span>
+            <span>Each incubator is fully isolated. Super admin sees across all institutions.</span>
           </div>
         </div>
       </div>
 
-      <div class="brand-footer">Built for Indian incubators · Powered by Supabase & Claude AI</div>
+      <div class="brand-footer">Built for Indian incubators · Powered by Supabase</div>
     </div>
 
     <!-- Form Panel -->
@@ -60,7 +60,7 @@
       <!-- LOGIN -->
       <div class="auth-panel" *ngIf="activeTab === 'login'">
         <div class="auth-field">
-          <label>Institution Code</label>
+          <label>INSTITUTION CODE</label>
           <input
             type="text"
             [(ngModel)]="loginSlug"
@@ -68,7 +68,7 @@
             (keydown.enter)="doLogin()">
         </div>
         <div class="auth-field">
-          <label>Passcode</label>
+          <label>PASSCODE</label>
           <input
             type="password"
             [(ngModel)]="loginPass"
@@ -85,10 +85,10 @@
       <!-- REGISTER -->
       <div class="auth-panel" *ngIf="activeTab === 'register'">
         <div class="auth-info">
-          Each institution gets a completely private workspace. Your portfolio data is never shared or visible to anyone outside your team.
+          Each institution gets a completely private workspace. Your data is invisible to other institutions.
         </div>
         <div class="auth-field">
-          <label>Institution Full Name</label>
+          <label>INSTITUTION FULL NAME</label>
           <input
             type="text"
             [(ngModel)]="regName"
@@ -97,32 +97,32 @@
             autocapitalize="off">
         </div>
         <div class="auth-field">
-          <label>Institution Code <span style="color:var(--t3);font-weight:400">(lowercase, no spaces)</span></label>
+          <label>INSTITUTION CODE <span class="label-hint">(lowercase, no spaces)</span></label>
           <input
             type="text"
             [(ngModel)]="regSlug"
             placeholder="e.g. iit-kanpur"
-            (change)="onRegSlugChange()">
+            (input)="onRegSlugChange()">
         </div>
         <div class="auth-field">
-          <label>City (Optional)</label>
+          <label>CITY</label>
           <input
             type="text"
             [(ngModel)]="regCity"
             placeholder="e.g. Kanpur">
         </div>
         <div class="auth-field">
-          <label>Passcode</label>
+          <label>PASSCODE <span class="label-hint">(share with your team only)</span></label>
           <input
             type="password"
             [(ngModel)]="regPass"
-            placeholder="Create a strong passcode"
+            placeholder="Choose a passcode"
             (keydown.enter)="doRegister()">
         </div>
         <button
           class="btn btn-gold btn-full btn-lg"
           (click)="doRegister()"
-          [disabled]="loading">{{ loading ? 'Creating...' : 'Create Workspace →' }}</button>
+          [disabled]="loading">{{ loading ? 'Creating...' : 'Register Institution →' }}</button>
         <div class="auth-error" *ngIf="error">{{ error }}</div>
       </div>
     </div>

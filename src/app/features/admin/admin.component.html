@@ -1,0 +1,108 @@
+<div class="admin-page">
+  <div class="page-header">
+    <div class="page-title">Super Admin</div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">INSTITUTIONS</div>
+      <div class="kpi-value">{{ institutions.length }}</div>
+      <div class="kpi-sub">Registered incubators</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">TOTAL STARTUPS</div>
+      <div class="kpi-value">1</div>
+      <div class="kpi-sub">Across all institutions</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">COMBINED MRR</div>
+      <div class="kpi-value">₹0</div>
+      <div class="kpi-sub">Full portfolio revenue</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">TOTAL FUNDING RAISED</div>
+      <div class="kpi-value">₹0</div>
+      <div class="kpi-sub">Across all portfolios</div>
+    </div>
+  </div>
+
+  <div class="table-section">
+    <div class="section-header">
+      <h2>All Institutions</h2>
+      <button class="btn-refresh" (click)="loadInstitutions()">⟳ Refresh</button>
+    </div>
+
+    <div class="table-container">
+      <table class="institutions-table">
+        <thead>
+          <tr>
+            <th>INSTITUTION</th>
+            <th>CODE</th>
+            <th>CITY</th>
+            <th>STARTUPS</th>
+            <th>AIVS IR</th>
+            <th>PORTFOLIO MRR</th>
+            <th>REGISTERED</th>
+            <th>ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let inst of institutions">
+            <td class="inst-name">{{ inst.name }}</td>
+            <td><span class="inst-code">{{ inst.slug }}</span></td>
+            <td>{{ inst.city || '—' }}</td>
+            <td>{{ 0 }}</td>
+            <td class="score-cell">0/100</td>
+            <td>₹0</td>
+            <td class="date-cell">{{ inst.created_at | date: 'd/M/yyyy' }}</td>
+            <td>
+              <button class="btn-action" (click)="resetPasscode(inst)">Reset Passcode</button>
+              <button class="btn-action btn-danger" (click)="deleteInstitution(inst)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="empty-state" *ngIf="institutions.length === 0 && !loading">
+        No institutions registered yet.
+      </div>
+    </div>
+  </div>
+
+  <div class="table-section">
+    <div class="section-header">
+      <h2>All Startups</h2>
+      <a href="#" class="link-view-all">1 startups</a>
+    </div>
+
+    <div class="table-container">
+      <table class="startups-table">
+        <thead>
+          <tr>
+            <th>STARTUP</th>
+            <th>INSTITUTION</th>
+            <th>SECTOR</th>
+            <th>STAGE</th>
+            <th>MRR</th>
+            <th>IR SCORE</th>
+            <th>RUNWAY</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="startup-name">KrishiSetu</div>
+              <div class="startup-tagline">We connect small farmers in Bihar directly to urban markets</div>
+            </td>
+            <td><span class="inst-link">NIT Durgapur</span></td>
+            <td>AgriTech</td>
+            <td>Idea</td>
+            <td>₹0</td>
+            <td class="score-cell warning">3</td>
+            <td class="runway-cell">0mo</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
