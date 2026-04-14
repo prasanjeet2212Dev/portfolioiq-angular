@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ClaudeAIService } from '../../services/claude-ai.service';
+import { AIService } from '../../services/claude-ai.service';
 import { ToastService } from '../toast/toast.service';
 import { DatabaseService } from '../../services/database.service';
 
@@ -51,7 +51,7 @@ export class ChatbotComponent implements OnInit {
   ];
 
   constructor(
-    private aiService: ClaudeAIService,
+    private aiService: AIService,
     private router: Router,
     private toast: ToastService,
     private dbService: DatabaseService

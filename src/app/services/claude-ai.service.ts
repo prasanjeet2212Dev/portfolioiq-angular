@@ -5,7 +5,7 @@ import { environment } from '../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class ClaudeAIService {
+export class AIService {
   private apiKey = '';
   private provider: 'claude' | 'github' = 'github';
 

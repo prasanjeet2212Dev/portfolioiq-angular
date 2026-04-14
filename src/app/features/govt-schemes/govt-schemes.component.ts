@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SupabaseService } from '../../services/supabase.service';
-import { ClaudeAIService } from '../../services/claude-ai.service';
+import { AIService } from '../../services/claude-ai.service';
 import { ToastService } from '../../shared/toast/toast.service';
 import { Startup } from '../../models';
 
@@ -37,7 +37,7 @@ export class GovtSchemesComponent implements OnInit {
 
   constructor(
     private supabase: SupabaseService,
-    private claude: ClaudeAIService,
+    private ai: AIService,
     private toast: ToastService
   ) {}
 
@@ -103,7 +103,7 @@ export class GovtSchemesComponent implements OnInit {
         updated_at: new Date().toISOString()
       };
 
-      const schemes = await this.claude.matchGovernmentSchemes(tempStartup);
+      const schemes = await this.ai.matchGovernmentSchemes(tempStartup);
       this.matchedSchemes = Array.isArray(schemes) ? schemes : [];
       if (this.matchedSchemes.length > 0) {
         this.toast.success(`Found ${this.matchedSchemes.length} matching schemes for ${this.startupName}`);

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SupabaseService } from '../../services/supabase.service';
-import { ClaudeAIService } from '../../services/claude-ai.service';
+import { AIService } from '../../services/claude-ai.service';
 import { ToastService } from '../../shared/toast/toast.service';
 import { Startup } from '../../models';
 
@@ -37,7 +37,7 @@ export class ValuationComponent implements OnInit {
 
   constructor(
     private supabase: SupabaseService,
-    private claude: ClaudeAIService,
+    private ai: AIService,
     private toast: ToastService
   ) {}
 
@@ -105,7 +105,7 @@ export class ValuationComponent implements OnInit {
         updated_at: new Date().toISOString()
       };
 
-      const result = await this.claude.estimateValuation(tempStartup);
+      const result = await this.ai.estimateValuation(tempStartup);
       this.valuationResult = result;
       this.toast.success(`Valuation estimate generated for ${this.startupName}`);
     } catch (err: any) {

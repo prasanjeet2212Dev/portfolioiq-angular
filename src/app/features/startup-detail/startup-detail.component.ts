@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SupabaseService } from '../../services/supabase.service';
 import { ScoringService } from '../../services/scoring.service';
-import { ClaudeAIService } from '../../services/claude-ai.service';
+import { AIService } from '../../services/claude-ai.service';
 import { ExportService } from '../../services/export.service';
 import { ToastService } from '../../shared/toast/toast.service';
 import { Startup, Insight } from '../../models';
@@ -28,8 +28,7 @@ export class StartupDetailComponent implements OnInit {
     private router: Router,
     private supabase: SupabaseService,
     private scoring: ScoringService,
-    private claude: ClaudeAIService,
-    private ai: ClaudeAIService,
+    private ai: AIService,
     private exportService: ExportService,
     private toast: ToastService
   ) {}
@@ -72,7 +71,7 @@ export class StartupDetailComponent implements OnInit {
     if (!this.startup) return;
     this.loadingAI = true;
     try {
-      const analysis = await this.claude.analyzeStartup(this.startup);
+      const analysis = await this.ai.analyzeStartup(this.startup);
       this.saveInsight({ analysis });
       this.toast.success('Analysis generated successfully');
     } catch (err: any) {
@@ -86,7 +85,7 @@ export class StartupDetailComponent implements OnInit {
     if (!this.startup) return;
     this.loadingAI = true;
     try {
-      const market_intel = await this.claude.generateMarketIntel(this.startup);
+      const market_intel = await this.ai.generateMarketIntel(this.startup);
       this.saveInsight({ market_intel });
       this.toast.success('Market intelligence generated successfully');
     } catch (err: any) {
@@ -100,7 +99,7 @@ export class StartupDetailComponent implements OnInit {
     if (!this.startup) return;
     this.loadingAI = true;
     try {
-      const action_plan = await this.claude.generateActionPlan(this.startup);
+      const action_plan = await this.ai.generateActionPlan(this.startup);
       this.saveInsight({ action_plan });
       this.toast.success('Action plan generated successfully');
     } catch (err: any) {
@@ -114,7 +113,7 @@ export class StartupDetailComponent implements OnInit {
     if (!this.startup) return;
     this.loadingAI = true;
     try {
-      const valuation = await this.claude.estimateValuation(this.startup);
+      const valuation = await this.ai.estimateValuation(this.startup);
       this.saveInsight({ valuation });
       this.toast.success('Valuation estimate generated successfully');
     } catch (err: any) {
@@ -128,7 +127,7 @@ export class StartupDetailComponent implements OnInit {
     if (!this.startup) return;
     this.loadingAI = true;
     try {
-      const schemes = await this.claude.matchGovernmentSchemes(this.startup);
+      const schemes = await this.ai.matchGovernmentSchemes(this.startup);
       this.saveInsight({ schemes });
       this.toast.success(`Matched ${schemes.length} government schemes`);
     } catch (err: any) {
@@ -180,7 +179,7 @@ export class StartupDetailComponent implements OnInit {
 
   setAPIKey() {
     if (this.apiKey) {
-      this.claude.setAPIKey(this.apiKey);
+      this.ai.setAPIKey(this.apiKey);
       this.showSettings = false;
     }
   }
