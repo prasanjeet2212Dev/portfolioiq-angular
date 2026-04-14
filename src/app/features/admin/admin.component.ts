@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SupabaseService } from '../../services/supabase.service';
 import { ScoringService } from '../../services/scoring.service';
 import { ToastService } from '../../shared/toast/toast.service';
+import { AIService } from '../../services/claude-ai.service';
 import { Institution, Startup } from '../../models';
 
 @Component({
@@ -13,6 +14,10 @@ export class AdminComponent implements OnInit {
   institutions: Institution[] = [];
   startups: Startup[] = [];
   loading = true;
+  
+  // Settings
+  showSettings = false;
+  githubToken = '';
   
   kpis = {
     institutionCount: 0,
@@ -27,11 +32,13 @@ export class AdminComponent implements OnInit {
   constructor(
     private supabase: SupabaseService,
     public scoring: ScoringService,
-    private toast: ToastService
+    private toast: ToastService,
+    private ai: AIService
   ) {}
 
   ngOnInit() {
     this.loadAllData();
+    this.loadGitHubToken();
   }
 
   async loadAllData() {
@@ -133,6 +140,38 @@ export class AdminComponent implements OnInit {
       } catch (err: any) {
         this.toast.error(err.message || 'Failed to delete institution');
       }
+    }
+  }
+
+  // Settings Management
+  toggleSettings() {
+    this.showSettings = !this.showSettings;
+  }
+
+  loadGitHubToken() {
+    this.githubToken = localStorage.getItem('piq_ai_key') || '';
+  }
+
+  saveGitHubToken() {
+    if (!this.githubToken.trim()) {
+      this.toast.warning('Please enter a GitHub token');
+      return;
+    }
+
+    if (!this.githubToken.startsWith('ghp_')) {
+      this.toast.warning('GitHub tokens should start with "ghp_"');
+      return;
+    }
+
+    this.ai.setAPIKey(this.githubToken);
+    this.toast.success('GitHub token saved successfully! AI features are now enabled.');
+  }
+
+  clearGitHubToken() {
+    if (confirm('Are you sure you want to remove the GitHub token? AI features will be disabled.')) {
+      this.githubToken = '';
+      localStorage.removeItem('piq_ai_key');
+      this.toast.info('GitHub token removed');
     }
   }
 }
