@@ -1,4 +1,12 @@
 <div class="all-startups-page">
+  <div class="page-title-section">
+    <h1>{{ isSuperAdmin ? 'All Institutions - Startups' : 'My Startups' }}</h1>
+    <div class="info-badge" *ngIf="isSuperAdmin">
+      <span class="badge-icon">👑</span>
+      <span>Super Admin - Viewing {{ allStartups.length }} startups across all institutions</span>
+    </div>
+  </div>
+  
   <div class="page-controls">
     <div class="search-box">
       <input 

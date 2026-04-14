@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SupabaseService } from '../../services/supabase.service';
 import { ClaudeAIService } from '../../services/claude-ai.service';
+import { ToastService } from '../../shared/toast/toast.service';
 import { Startup } from '../../models';
 
 @Component({
@@ -36,7 +37,8 @@ export class ValuationComponent implements OnInit {
 
   constructor(
     private supabase: SupabaseService,
-    private claude: ClaudeAIService
+    private claude: ClaudeAIService,
+    private toast: ToastService
   ) {}
 
   async ngOnInit() {
@@ -77,7 +79,7 @@ export class ValuationComponent implements OnInit {
 
   async estimateValuation() {
     if (!this.startupName || !this.sector || !this.stage) {
-      alert('Please fill in at least Startup Name, Sector, and Stage');
+      this.toast.warning('Please fill in at least Startup Name, Sector, and Stage');
       return;
     }
 
@@ -105,8 +107,9 @@ export class ValuationComponent implements OnInit {
 
       const result = await this.claude.estimateValuation(tempStartup);
       this.valuationResult = result;
+      this.toast.success(`Valuation estimate generated for ${this.startupName}`);
     } catch (err: any) {
-      alert('Error: ' + (err.message || 'Failed to estimate valuation'));
+      this.toast.error(err.message || 'Failed to estimate valuation');
     } finally {
       this.loading = false;
     }

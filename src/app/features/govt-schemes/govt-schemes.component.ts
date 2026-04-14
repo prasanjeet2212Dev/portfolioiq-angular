@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SupabaseService } from '../../services/supabase.service';
 import { ClaudeAIService } from '../../services/claude-ai.service';
+import { ToastService } from '../../shared/toast/toast.service';
 import { Startup } from '../../models';
 
 @Component({
@@ -36,7 +37,8 @@ export class GovtSchemesComponent implements OnInit {
 
   constructor(
     private supabase: SupabaseService,
-    private claude: ClaudeAIService
+    private claude: ClaudeAIService,
+    private toast: ToastService
   ) {}
 
   async ngOnInit() {
@@ -75,7 +77,7 @@ export class GovtSchemesComponent implements OnInit {
 
   async findSchemes() {
     if (!this.startupName || !this.sector || !this.stage) {
-      alert('Please fill in at least Startup Name, Sector, and Stage');
+      this.toast.warning('Please fill in at least Startup Name, Sector, and Stage');
       return;
     }
 
@@ -103,8 +105,13 @@ export class GovtSchemesComponent implements OnInit {
 
       const schemes = await this.claude.matchGovernmentSchemes(tempStartup);
       this.matchedSchemes = Array.isArray(schemes) ? schemes : [];
+      if (this.matchedSchemes.length > 0) {
+        this.toast.success(`Found ${this.matchedSchemes.length} matching schemes for ${this.startupName}`);
+      } else {
+        this.toast.info('No matching schemes found. Try different criteria.');
+      }
     } catch (err: any) {
-      alert('Error: ' + (err.message || 'Failed to match schemes'));
+      this.toast.error(err.message || 'Failed to match schemes');
     } finally {
       this.loading = false;
     }

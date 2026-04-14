@@ -28,6 +28,8 @@ export class ComparisonComponent implements OnInit {
   selectedIds: number[] = [];
   comparisonData: ComparisonStartup[] = [];
   maxSelections = 4;
+  isSuperAdmin = false;
+  loading = true;
 
   constructor(
     private supabase: SupabaseService,
@@ -36,13 +38,44 @@ export class ComparisonComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.checkAdminStatus();
     this.loadStartups();
   }
 
-  loadStartups() {
-    this.supabase.getStartups().subscribe(startups => {
-      this.allStartups = startups;
+  checkAdminStatus() {
+    this.isSuperAdmin = this.supabase.getSuperAdminStatus();
+    console.log('Comparison: Is Super Admin =', this.isSuperAdmin);
+    console.log('Comparison: Session flags =', {
+      piq_super_admin: sessionStorage.getItem('piq_super_admin'),
+      session: sessionStorage.getItem('session')
     });
+  }
+
+  async loadStartups() {
+    try {
+      if (this.isSuperAdmin) {
+        console.log('Loading all startups across institutions...');
+        this.allStartups = await this.supabase.getAllStartupsAcrossInstitutions();
+        console.log('Loaded', this.allStartups.length, 'startups');
+        this.loading = false;
+      } else {
+        console.log('Loading institution startups...');
+        this.supabase.getStartups().subscribe({
+          next: (startups) => {
+            this.allStartups = startups;
+            console.log('Loaded', startups.length, 'startups');
+            this.loading = false;
+          },
+          error: (err) => {
+            console.error('Error loading startups:', err);
+            this.loading = false;
+          }
+        });
+      }
+    } catch (err) {
+      console.error('Error loading startups:', err);
+      this.loading = false;
+    }
   }
 
   toggleStartup(id: number) {
@@ -142,5 +175,9 @@ export class ComparisonComponent implements OnInit {
   getStartupStage(startup: Startup): string {
     const data = startup.data as any;
     return data['stage'] || 'Unknown';
+  }
+
+  getSessionInfo(): string {
+    return sessionStorage.getItem('session') || 'No session';
   }
 }

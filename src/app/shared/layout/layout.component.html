@@ -9,10 +9,10 @@
     </div>
 
     <div class="user-info">
-      <div class="user-avatar">●</div>
+      <div class="user-avatar">{{ isSuperAdmin ? 'SA' : (institution?.name?.charAt(0) || 'A') }}</div>
       <div class="user-details">
-        <div class="user-name">{{ institution?.name || 'Super Admin' }}</div>
-        <div class="user-role">admin</div>
+        <div class="user-name" *ngIf="!isSuperAdmin">{{ institution?.name }}</div>
+        <div class="user-role">{{ isSuperAdmin ? 'SUPER ADMIN' : 'ADMIN' }}</div>
       </div>
     </div>
 
@@ -32,7 +32,7 @@
     <nav class="sidebar-nav">
       <a routerLink="/all-startups" class="nav-item" [class.active]="isActive('/all-startups')">
         <span class="nav-icon">📊</span>
-        <span class="nav-label">All Startups</span>
+        <span class="nav-label">{{ isSuperAdmin ? 'All Institutions' : 'My Startups' }}</span>
       </a>
       <a routerLink="/comparison" class="nav-item" [class.active]="isActive('/comparison')">
         <span class="nav-icon">⚖</span>
@@ -63,23 +63,36 @@
     <div class="sidebar-footer">
       <div class="footer-item">{{ isSuperAdmin ? 'All Institutions' : 'Portfolio' }}</div>
       <div class="footer-count">{{ startupCount }} startups</div>
-      <button class="sign-out-btn" (click)="logout()">
-        <span class="sign-out-icon">↪</span>
-        Sign Out
-      </button>
     </div>
   </div>
 
   <!-- Main Content -->
   <div class="main-content">
     <div class="content-header">
-      <div class="content-header-date">{{ currentDate | date: 'd MMM YYYY' }}</div>
-      <button class="btn-add-startup" routerLink="/add-startup">
-        <span>+</span> Add Startup
-      </button>
+      <div class="header-left">
+        <div class="content-header-date">
+          <span class="date-icon">📅</span>
+          <span>{{ currentDate | date: 'd MMM YYYY' }}</span>
+        </div>
+      </div>
+      <div class="header-right">
+        <button class="btn-add-startup" routerLink="/add-startup">
+          <span>+</span> Add Startup
+        </button>
+        <button class="btn-sign-out" (click)="logout()">
+          <span class="sign-out-icon">↪</span>
+          Sign Out
+        </button>
+      </div>
     </div>
     <div class="content-body">
       <router-outlet></router-outlet>
     </div>
   </div>
+
+  <!-- AI Chatbot -->
+  <app-chatbot></app-chatbot>
+
+  <!-- Toast Notifications -->
+  <app-toast></app-toast>
 </div>

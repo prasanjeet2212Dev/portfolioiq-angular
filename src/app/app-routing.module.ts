@@ -11,11 +11,12 @@ import { ShowcaseComponent } from './features/showcase/showcase.component';
 import { AllStartupsComponent } from './features/all-startups/all-startups.component';
 import { MarketSizingComponent } from './features/market-sizing/market-sizing.component';
 import { ComparisonComponent } from './features/comparison/comparison.component';
+import { LandingComponent } from './features/landing/landing.component';
 import { LayoutComponent } from './shared/layout/layout.component';
 import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: '', component: LandingComponent },
   { path: 'auth', component: AuthComponent },
   {
     path: '',

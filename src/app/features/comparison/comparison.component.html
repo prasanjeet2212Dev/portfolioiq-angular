@@ -2,16 +2,37 @@
   <div class="page-header">
     <div>
       <h1>Compare Startups</h1>
-      <p class="subtitle">Select up to {{ maxSelections }} startups to compare side-by-side</p>
+      <p class="subtitle">Select startups → View side-by-side comparison table</p>
+      <div class="info-badge" *ngIf="isSuperAdmin">
+        <span class="badge-icon">👑</span>
+        <span>Super Admin Mode - Viewing all institutions</span>
+      </div>
     </div>
     <button class="btn-clear" (click)="clearAll()" *ngIf="selectedIds.length > 0">
       Clear All ({{ selectedIds.length }})
     </button>
   </div>
 
+  <!-- Loading State -->
+  <div class="loading-state" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Loading startups...</p>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="!loading && allStartups.length === 0">
+    <div class="empty-icon">📊</div>
+    <h3>No Startups Found</h3>
+    <p *ngIf="!isSuperAdmin">There are no startups in your portfolio yet.</p>
+    <p *ngIf="isSuperAdmin">No startups found across any institution.</p>
+    <button class="btn-primary" routerLink="/add-startup">
+      <span>+</span> Add Your First Startup
+    </button>
+  </div>
+
   <!-- Selection Grid -->
-  <div class="selection-section" *ngIf="selectedIds.length < maxSelections">
-    <h3>Select Startups to Compare</h3>
+  <div class="selection-section" *ngIf="!loading && allStartups.length > 0 && selectedIds.length < maxSelections">
+    <h3>Select Startups to Compare ({{ allStartups.length }} available)</h3>
     <div class="startup-grid">
       <div class="startup-card" 
            *ngFor="let startup of allStartups"
@@ -27,7 +48,10 @@
 
   <!-- Comparison Table -->
   <div class="comparison-section" *ngIf="comparisonData.length >= 2">
-    <h3>Comparison Matrix</h3>
+    <div class="comparison-header">
+      <h3>📊 Side-by-Side Comparison</h3>
+      <p class="comparison-subtitle">Comparing {{ comparisonData.length }} startups - Best values highlighted</p>
+    </div>
     <div class="comparison-table-wrapper">
       <table class="comparison-table">
         <thead>
@@ -142,9 +166,16 @@
   </div>
 
   <!-- Empty State -->
-  <div class="empty-state" *ngIf="comparisonData.length < 2">
+  <div class="empty-state" *ngIf="!loading && comparisonData.length < 2">
     <div class="empty-icon">📊</div>
     <h3>Select startups to compare</h3>
     <p>Choose at least 2 startups from the list above to see a side-by-side comparison</p>
+  </div>
+
+  <!-- No Startups State -->
+  <div class="empty-state" *ngIf="!loading && allStartups.length === 0">
+    <div class="empty-icon">📂</div>
+    <h3>No startups in your portfolio</h3>
+    <p>Add your first startup to start comparing</p>
   </div>
 </div>

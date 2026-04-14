@@ -1,0 +1,11 @@
+<div class="toast-container">
+  <ng-container *ngFor="let toast of toasts">
+    <div 
+      *ngIf="toast.message && toast.message.trim()"
+      class="toast toast-{{ toast.type }}">
+      <div class="toast-icon">{{ getIcon(toast.type) }}</div>
+      <div class="toast-message">{{ toast.message }}</div>
+      <button class="toast-close" (click)="close(toast.id)">×</button>
+    </div>
+  </ng-container>
+</div>

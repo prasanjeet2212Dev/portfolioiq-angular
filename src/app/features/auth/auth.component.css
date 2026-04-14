@@ -210,14 +210,14 @@
 }
 
 .btn-gold {
-  background: #d4a745;
+  background: #667eea;
   color: white;
 }
 
 .btn-gold:hover:not(:disabled) {
-  background: #c49635;
+  background: #5568d3;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(212, 167, 69, 0.3);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
 .btn-full {

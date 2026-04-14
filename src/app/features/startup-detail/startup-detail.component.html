@@ -4,17 +4,7 @@
     <h1>{{ startup.data['name'] }}</h1>
     <div class="header-actions">
       <button class="btn btn-primary" (click)="exportReport()">📥 Export Report</button>
-      <button class="btn btn-secondary" (click)="showSettings = !showSettings">⚙ AI Settings</button>
       <button class="btn btn-danger" (click)="deleteStartup()">🗑 Delete</button>
-    </div>
-  </div>
-
-  <div class="ai-settings" *ngIf="showSettings">
-    <div class="settings-panel">
-      <label>Anthropic API Key</label>
-      <input type="password" [(ngModel)]="apiKey" placeholder="sk-...">
-      <div class="settings-hint">Your key is stored locally in your browser for development. In production, the Netlify backend should use the server secret instead.</div>
-      <button class="btn btn-gold" (click)="setAPIKey()">Save Key</button>
     </div>
   </div>
 
@@ -112,8 +102,13 @@
 
           <!-- Analysis Tab -->
           <div *ngIf="!loadingAI && aiTab === 'analysis'">
-            <div *ngIf="insight?.data?.analysis" class="ai-text">
-              {{ insight?.data?.analysis }}
+            <div *ngIf="insight?.data?.analysis">
+              <div class="ai-text">
+                {{ insight?.data?.analysis }}
+              </div>
+              <button class="btn-regenerate" (click)="generateAnalysis()">
+                🔄 Regenerate Analysis
+              </button>
             </div>
             <div *ngIf="!insight?.data?.analysis" class="ai-empty">
               <p>No analysis generated yet.</p>
@@ -125,8 +120,13 @@
 
           <!-- Market Intel Tab -->
           <div *ngIf="!loadingAI && aiTab === 'market'">
-            <div *ngIf="insight?.data?.market_intel" class="ai-text">
-              {{ insight?.data?.market_intel }}
+            <div *ngIf="insight?.data?.market_intel">
+              <div class="ai-text">
+                {{ insight?.data?.market_intel }}
+              </div>
+              <button class="btn-regenerate" (click)="generateMarketIntel()">
+                🔄 Regenerate Market Intel
+              </button>
             </div>
             <div *ngIf="!insight?.data?.market_intel" class="ai-empty">
               <p>No market intelligence generated yet.</p>
@@ -138,8 +138,13 @@
 
           <!-- Action Plan Tab -->
           <div *ngIf="!loadingAI && aiTab === 'action'">
-            <div *ngIf="insight?.data?.action_plan" class="ai-text">
-              {{ insight?.data?.action_plan }}
+            <div *ngIf="insight?.data?.action_plan">
+              <div class="ai-text">
+                {{ insight?.data?.action_plan }}
+              </div>
+              <button class="btn-regenerate" (click)="generateActionPlan()">
+                🔄 Regenerate Action Plan
+              </button>
             </div>
             <div *ngIf="!insight?.data?.action_plan" class="ai-empty">
               <p>No action plan generated yet.</p>
@@ -151,8 +156,13 @@
 
           <!-- Valuation Tab -->
           <div *ngIf="!loadingAI && aiTab === 'valuation'">
-            <div *ngIf="insight?.data?.valuation" class="ai-text">
-              {{ insight?.data?.valuation }}
+            <div *ngIf="insight?.data?.valuation">
+              <div class="ai-text">
+                {{ insight?.data?.valuation }}
+              </div>
+              <button class="btn-regenerate" (click)="generateValuation()">
+                🔄 Regenerate Valuation
+              </button>
             </div>
             <div *ngIf="!insight?.data?.valuation" class="ai-empty">
               <p>No valuation estimate generated yet.</p>
@@ -165,12 +175,17 @@
           <!-- Schemes Tab -->
           <div *ngIf="!loadingAI && aiTab === 'schemes'">
             <ng-container *ngIf="insight?.data?.schemes as schemes">
-              <div *ngIf="schemes.length > 0" class="schemes-list">
-                <div class="scheme-item" *ngFor="let scheme of schemes">
-                  <h4>{{ scheme.name }}</h4>
-                  <p>{{ scheme.description }}</p>
-                  <a *ngIf="scheme.url" [href]="scheme.url" target="_blank">Learn more →</a>
+              <div *ngIf="schemes.length > 0">
+                <div class="schemes-list">
+                  <div class="scheme-item" *ngFor="let scheme of schemes">
+                    <h4>{{ scheme.name }}</h4>
+                    <p>{{ scheme.description }}</p>
+                    <a *ngIf="scheme.url" [href]="scheme.url" target="_blank">Learn more →</a>
+                  </div>
                 </div>
+                <button class="btn-regenerate" (click)="matchSchemes()">
+                  🔄 Refresh Scheme Matches
+                </button>
               </div>
               <div *ngIf="schemes.length === 0" class="ai-empty">
                 <p>No government schemes matched yet.</p>

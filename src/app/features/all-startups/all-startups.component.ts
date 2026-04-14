@@ -18,6 +18,7 @@ export class AllStartupsComponent implements OnInit {
   allStartups: Startup[] = [];
   filteredStartups: Startup[] = [];
   loading = true;
+  isSuperAdmin = false;
 
   constructor(
     private supabase: SupabaseService,
@@ -33,10 +34,10 @@ export class AllStartupsComponent implements OnInit {
     this.loading = true;
     try {
       // Check if user is super admin
-      const isSuperAdmin = this.supabase.getSuperAdminStatus();
-      console.log('Is super admin?', isSuperAdmin);
+      this.isSuperAdmin = this.supabase.getSuperAdminStatus();
+      console.log('All Startups Page: Is super admin?', this.isSuperAdmin);
       
-      if (isSuperAdmin) {
+      if (this.isSuperAdmin) {
         // Super admin: fetch all startups across all institutions
         console.log('Fetching all startups for super admin...');
         const allStartups = await this.supabase.getAllStartupsAcrossInstitutions();

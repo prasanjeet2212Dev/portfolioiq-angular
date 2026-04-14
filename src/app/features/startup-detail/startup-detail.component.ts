@@ -4,6 +4,7 @@ import { SupabaseService } from '../../services/supabase.service';
 import { ScoringService } from '../../services/scoring.service';
 import { ClaudeAIService } from '../../services/claude-ai.service';
 import { ExportService } from '../../services/export.service';
+import { ToastService } from '../../shared/toast/toast.service';
 import { Startup, Insight } from '../../models';
 
 @Component({
@@ -29,7 +30,8 @@ export class StartupDetailComponent implements OnInit {
     private scoring: ScoringService,
     private claude: ClaudeAIService,
     private ai: ClaudeAIService,
-    private exportService: ExportService
+    private exportService: ExportService,
+    private toast: ToastService
   ) {}
 
   ngOnInit() {
@@ -72,8 +74,9 @@ export class StartupDetailComponent implements OnInit {
     try {
       const analysis = await this.claude.analyzeStartup(this.startup);
       this.saveInsight({ analysis });
+      this.toast.success('Analysis generated successfully');
     } catch (err: any) {
-      alert('Error: ' + (err.message || 'Failed to generate analysis'));
+      this.toast.error(err.message || 'Failed to generate analysis');
     } finally {
       this.loadingAI = false;
     }
@@ -85,8 +88,9 @@ export class StartupDetailComponent implements OnInit {
     try {
       const market_intel = await this.claude.generateMarketIntel(this.startup);
       this.saveInsight({ market_intel });
+      this.toast.success('Market intelligence generated successfully');
     } catch (err: any) {
-      alert('Error: ' + (err.message || 'Failed to generate market intel'));
+      this.toast.error(err.message || 'Failed to generate market intel');
     } finally {
       this.loadingAI = false;
     }
@@ -98,8 +102,9 @@ export class StartupDetailComponent implements OnInit {
     try {
       const action_plan = await this.claude.generateActionPlan(this.startup);
       this.saveInsight({ action_plan });
+      this.toast.success('Action plan generated successfully');
     } catch (err: any) {
-      alert('Error: ' + (err.message || 'Failed to generate action plan'));
+      this.toast.error(err.message || 'Failed to generate action plan');
     } finally {
       this.loadingAI = false;
     }
@@ -111,8 +116,9 @@ export class StartupDetailComponent implements OnInit {
     try {
       const valuation = await this.claude.estimateValuation(this.startup);
       this.saveInsight({ valuation });
+      this.toast.success('Valuation estimate generated successfully');
     } catch (err: any) {
-      alert('Error: ' + (err.message || 'Failed to estimate valuation'));
+      this.toast.error(err.message || 'Failed to estimate valuation');
     } finally {
       this.loadingAI = false;
     }
@@ -124,8 +130,9 @@ export class StartupDetailComponent implements OnInit {
     try {
       const schemes = await this.claude.matchGovernmentSchemes(this.startup);
       this.saveInsight({ schemes });
+      this.toast.success(`Matched ${schemes.length} government schemes`);
     } catch (err: any) {
-      alert('Error: ' + (err.message || 'Failed to match schemes'));
+      this.toast.error(err.message || 'Failed to match schemes');
     } finally {
       this.loadingAI = false;
     }
@@ -145,7 +152,7 @@ export class StartupDetailComponent implements OnInit {
       const institution = await this.supabase.getCurrentInstitution().toPromise();
       if (!institution) {
         console.error('No institution found for regular user');
-        alert('Error: Unable to save insight - no institution found');
+        this.toast.error('Unable to save insight - no institution found');
         return;
       }
       institutionId = institution.id;
@@ -167,7 +174,7 @@ export class StartupDetailComponent implements OnInit {
       console.log('Insight saved successfully:', insight);
     } catch (err) {
       console.error('Error saving insight:', err);
-      alert('Error saving insight: ' + (err as any).message);
+      this.toast.error('Error saving insight: ' + (err as any).message);
     }
   }
 

@@ -6,22 +6,22 @@
   <div class="kpi-grid">
     <div class="kpi-card">
       <div class="kpi-label">INSTITUTIONS</div>
-      <div class="kpi-value">{{ institutions.length }}</div>
+      <div class="kpi-value">{{ kpis.institutionCount }}</div>
       <div class="kpi-sub">Registered incubators</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-label">TOTAL STARTUPS</div>
-      <div class="kpi-value">1</div>
+      <div class="kpi-value">{{ kpis.startupCount }}</div>
       <div class="kpi-sub">Across all institutions</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-label">COMBINED MRR</div>
-      <div class="kpi-value">₹0</div>
+      <div class="kpi-value">₹{{ (kpis.totalMRR / 100000).toFixed(1) }}L</div>
       <div class="kpi-sub">Full portfolio revenue</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-label">TOTAL FUNDING RAISED</div>
-      <div class="kpi-value">₹0</div>
+      <div class="kpi-value">₹{{ (kpis.totalFunding / 10000000).toFixed(1) }}Cr</div>
       <div class="kpi-sub">Across all portfolios</div>
     </div>
   </div>
@@ -29,7 +29,7 @@
   <div class="table-section">
     <div class="section-header">
       <h2>All Institutions</h2>
-      <button class="btn-refresh" (click)="loadInstitutions()">⟳ Refresh</button>
+      <button class="btn-refresh" (click)="loadAllData()">⟳ Refresh</button>
     </div>
 
     <div class="table-container">
@@ -51,9 +51,9 @@
             <td class="inst-name">{{ inst.name }}</td>
             <td><span class="inst-code">{{ inst.slug }}</span></td>
             <td>{{ inst.city || '—' }}</td>
-            <td>{{ 0 }}</td>
-            <td class="score-cell">0/100</td>
-            <td>₹0</td>
+            <td>{{ getInstitutionStats(inst.id).count }}</td>
+            <td class="score-cell">{{ getInstitutionStats(inst.id).avgScore }}/100</td>
+            <td>₹{{ (getInstitutionStats(inst.id).mrr / 100000).toFixed(1) }}L</td>
             <td class="date-cell">{{ inst.created_at | date: 'd/M/yyyy' }}</td>
             <td>
               <button class="btn-action" (click)="resetPasscode(inst)">Reset Passcode</button>
@@ -72,7 +72,7 @@
   <div class="table-section">
     <div class="section-header">
       <h2>All Startups</h2>
-      <a href="#" class="link-view-all">1 startups</a>
+      <a href="#" class="link-view-all">{{ kpis.startupCount }} startup{{ kpis.startupCount !== 1 ? 's' : '' }}</a>
     </div>
 
     <div class="table-container">
@@ -89,20 +89,28 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
+          <tr *ngFor="let startup of startups">
             <td>
-              <div class="startup-name">KrishiSetu</div>
-              <div class="startup-tagline">We connect small farmers in Bihar directly to urban markets</div>
+              <div class="startup-name">{{ startup.data.name }}</div>
+              <div class="startup-tagline">{{ startup.data['brief_description'] || startup.data['description'] || 'No description' }}</div>
             </td>
-            <td><span class="inst-link">NIT Durgapur</span></td>
-            <td>AgriTech</td>
-            <td>Idea</td>
-            <td>₹0</td>
-            <td class="score-cell warning">3</td>
-            <td class="runway-cell">0mo</td>
+            <td><span class="inst-link">{{ getInstitutionName(startup.institution_id) }}</span></td>
+            <td>{{ startup.data.sector }}</td>
+            <td>{{ startup.data.stage }}</td>
+            <td>₹{{ ((startup.data.mrr || 0) / 100000).toFixed(1) }}L</td>
+            <td class="score-cell" 
+                [class.warning]="getStartupIRScore(startup) < 30"
+                [class.success]="getStartupIRScore(startup) >= 70">
+              {{ getStartupIRScore(startup) }}
+            </td>
+            <td class="runway-cell">{{ startup.data.runway || 0 }}mo</td>
           </tr>
         </tbody>
       </table>
+      
+      <div class="empty-state" *ngIf="startups.length === 0 && !loading">
+        No startups in the portfolio yet.
+      </div>
     </div>
   </div>
 </div>

@@ -19,6 +19,9 @@ import { MarketSizingComponent } from './features/market-sizing/market-sizing.co
 import { ScoreBreakdownComponent } from './shared/score-breakdown/score-breakdown.component';
 import { MiniChartComponent } from './shared/mini-chart/mini-chart.component';
 import { ComparisonComponent } from './features/comparison/comparison.component';
+import { LandingComponent } from './features/landing/landing.component';
+import { ChatbotComponent } from './shared/chatbot/chatbot.component';
+import { ToastComponent } from './shared/toast/toast.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +39,10 @@ import { ComparisonComponent } from './features/comparison/comparison.component'
     MarketSizingComponent,
     ScoreBreakdownComponent,
     MiniChartComponent,
-    ComparisonComponent
+    ComparisonComponent,
+    LandingComponent,
+    ChatbotComponent,
+    ToastComponent
   ],
   imports: [
     BrowserModule,
