@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SupabaseService } from '../../services/supabase.service';
+import { AIService } from '../../services/claude-ai.service';
+import { ToastService } from '../toast/toast.service';
 import { Institution } from '../../models';
 
 @Component({
@@ -13,10 +15,16 @@ export class LayoutComponent implements OnInit {
   currentDate = new Date();
   startupCount = 0;
   isSuperAdmin = false;
+  
+  // Settings panel
+  showSettings = false;
+  githubToken = '';
 
   constructor(
     private router: Router,
-    private supabase: SupabaseService
+    private supabase: SupabaseService,
+    private ai: AIService,
+    private toast: ToastService
   ) {}
 
   ngOnInit() {
@@ -47,5 +55,35 @@ export class LayoutComponent implements OnInit {
 
   isActive(route: string): boolean {
     return this.router.url.includes(route);
+  }
+
+  toggleSettings() {
+    this.showSettings = !this.showSettings;
+    if (this.showSettings) {
+      // Load existing token from localStorage if available
+      this.githubToken = localStorage.getItem('piq_ai_key') || '';
+    }
+  }
+
+  saveGitHubToken() {
+    if (!this.githubToken.trim()) {
+      this.toast.warning('Please enter a GitHub token');
+      return;
+    }
+
+    if (!this.githubToken.startsWith('ghp_')) {
+      this.toast.warning('Invalid token format. GitHub tokens start with ghp_');
+      return;
+    }
+
+    this.ai.setAPIKey(this.githubToken);
+    this.toast.success('GitHub token saved successfully! AI features enabled.');
+    this.showSettings = false;
+  }
+
+  clearGitHubToken() {
+    this.githubToken = '';
+    localStorage.removeItem('piq_ai_key');
+    this.toast.info('GitHub token cleared. AI features disabled.');
   }
 }
