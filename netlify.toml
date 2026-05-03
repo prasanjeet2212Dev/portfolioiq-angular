@@ -15,8 +15,8 @@
   force = true
 
 [[redirects]]
-  from = "/api/github-models/*"
-  to = "https://models.inference.ai.azure.com/:splat"
+  from = "/api/github-models"
+  to = "/.netlify/functions/github-models"
   status = 200
   force = true
 

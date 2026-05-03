@@ -55,10 +55,8 @@
   </div>
 
   <div class="empty-state" *ngIf="!loading && filteredStartups.length === 0 && allStartups.length > 0">
-    <p>Found {{ allStartups.length }} startups, but they were filtered out.</p>
-    <p>Debug: All startups data: <code>{{ allStartups | json }}</code></p>
-    <p>Selected filters - Stage: {{ selectedStage }}, Sector: {{ selectedSector }}</p>
-    <p><strong>Check your browser console (F12) for detailed filter logs.</strong></p>
+    <p>Found {{ allStartups.length }} startups, but they were filtered out by your search/filters.</p>
+    <button class="btn-clear-filters" (click)="clearFilters()">Clear All Filters</button>
   </div>
 
   <div class="startups-grid" *ngIf="!loading && filteredStartups.length > 0">
