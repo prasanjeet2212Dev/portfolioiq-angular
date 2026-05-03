@@ -15,10 +15,6 @@ export class AdminComponent implements OnInit {
   startups: Startup[] = [];
   loading = true;
   
-  // Settings
-  showSettings = false;
-  githubToken = '';
-  
   kpis = {
     institutionCount: 0,
     startupCount: 0,
@@ -38,7 +34,6 @@ export class AdminComponent implements OnInit {
 
   ngOnInit() {
     this.loadAllData();
-    this.loadGitHubToken();
   }
 
   async loadAllData() {
@@ -143,35 +138,4 @@ export class AdminComponent implements OnInit {
     }
   }
 
-  // Settings Management
-  toggleSettings() {
-    this.showSettings = !this.showSettings;
-  }
-
-  loadGitHubToken() {
-    this.githubToken = localStorage.getItem('piq_ai_key') || '';
-  }
-
-  saveGitHubToken() {
-    if (!this.githubToken.trim()) {
-      this.toast.warning('Please enter a GitHub token');
-      return;
-    }
-
-    if (!this.githubToken.startsWith('ghp_')) {
-      this.toast.warning('GitHub tokens should start with "ghp_"');
-      return;
-    }
-
-    this.ai.setAPIKey(this.githubToken);
-    this.toast.success('GitHub token saved successfully! AI features are now enabled.');
-  }
-
-  clearGitHubToken() {
-    if (confirm('Are you sure you want to remove the GitHub token? AI features will be disabled.')) {
-      this.githubToken = '';
-      localStorage.removeItem('piq_ai_key');
-      this.toast.info('GitHub token removed');
-    }
-  }
 }

@@ -10,12 +10,9 @@ export class AIService {
 
   constructor() {
     this.provider = (environment as any).ai?.provider || 'github';
-    console.log('AI: Using server-side token via Netlify Function');
   }
 
   async analyzeStartup(startup: Startup): Promise<string> {
-    // Local API key is optional when a backend server secret is configured.
-
     const prompt = `Analyze this Indian startup for investment readiness in 2-3 sentences:
 Name: ${startup.data.name}
 Stage: ${startup.data.stage}
@@ -30,24 +27,18 @@ Runway: ${startup.data.runway || 0} months`;
   }
 
   async generateMarketIntel(startup: Startup): Promise<string> {
-    // Local API key is optional when a backend server secret is configured.
-
     const prompt = `Provide market intelligence on the ${startup.data.sector} sector in India affecting ${startup.data.name}. Focus on opportunities and threats in 2-3 sentences.`;
 
     return this.callClaude(prompt);
   }
 
   async generateActionPlan(startup: Startup): Promise<string> {
-    // Local API key is optional when a backend server secret is configured.
-
     const prompt = `Create a 90-day action plan for ${startup.data.name} (${startup.data.stage} stage, ${startup.data.sector}). Focus on 3-4 key milestones.`;
 
     return this.callClaude(prompt);
   }
 
   async estimateValuation(startup: Startup): Promise<string> {
-    // Local API key is optional when a backend server secret is configured.
-
     const prompt = `Estimate a valuation range in ₹ Cr for ${startup.data.name}:
 - Stage: ${startup.data.stage}
 - Revenue: ₹${startup.data.revenue || 0}
@@ -58,8 +49,6 @@ Provide 1-2 comparable Indian deals and justify the range.`;
   }
 
   async matchGovernmentSchemes(startup: Startup): Promise<any[]> {
-    // Local API key is optional when a backend server secret is configured.
-
     const prompt = `Identify government schemes (central & state) for this startup:
 Name: ${startup.data.name}
 Stage: ${startup.data.stage}
@@ -97,9 +86,6 @@ Only return the JSON array, no other text.`;
     const env = environment as any;
     const model = env.ai?.github?.model || 'gpt-4o';
     
-    console.log('GitHub Models - Making request with model:', model);
-    console.log('GitHub Models - Using Netlify Function (server-side token)');
-    
     const requestBody = {
       messages: [
         {
@@ -125,8 +111,6 @@ Only return the JSON array, no other text.`;
       body: JSON.stringify(requestBody)
     });
 
-    console.log('GitHub Models - Response status:', response.status);
-
     if (!response.ok) {
       const errorText = await response.text();
       console.error('GitHub Models - Error response:', errorText);
@@ -151,10 +135,6 @@ Only return the JSON array, no other text.`;
       'anthropic-dangerous-direct-browser-access': 'true',
       'content-type': 'application/json'
     };
-
-    if (this.apiKey) {
-      headers['x-api-key'] = this.apiKey;
-    }
 
     const response = await fetch('/api/claude', {
       method: 'POST',
