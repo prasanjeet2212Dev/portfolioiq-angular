@@ -5,6 +5,8 @@
 
 [build.environment]
   NODE_VERSION = "20"
+  # GitHub token for AI features (set in Netlify Dashboard → Environment Variables)
+  # Users will automatically get AI features without manual configuration
 
 [[redirects]]
   from = "/api/claude"

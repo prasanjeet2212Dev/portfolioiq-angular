@@ -60,6 +60,14 @@
       </a>
     </nav>
 
+    <div class="sidebar-section-label" *ngIf="isSuperAdmin">SYSTEM</div>
+    <nav class="sidebar-nav" *ngIf="isSuperAdmin">
+      <a class="nav-item" (click)="toggleSettings()" style="cursor: pointer;">
+        <span class="nav-icon">⚙</span>
+        <span class="nav-label">AI Settings</span>
+      </a>
+    </nav>
+
     <div class="sidebar-footer">
       <div class="footer-item">{{ isSuperAdmin ? 'All Institutions' : 'Portfolio' }}</div>
       <div class="footer-count">{{ startupCount }} startups</div>
@@ -87,6 +95,64 @@
     </div>
     <div class="content-body">
       <router-outlet></router-outlet>
+    </div>
+  </div>
+
+  <!-- Settings Panel (Super Admin Only) -->
+  <div class="settings-overlay" *ngIf="showSettings && isSuperAdmin" (click)="showSettings = false"></div>
+  <div class="settings-panel" [class.active]="showSettings && isSuperAdmin">
+    <div class="settings-header">
+      <h3>🤖 AI Configuration (Super Admin)</h3>
+      <button class="btn-close" (click)="toggleSettings()">×</button>
+    </div>
+    
+    <div class="settings-body">
+      <div class="settings-info">
+        <p><strong>GitHub Models API Token</strong></p>
+        <p class="info-text">
+          As Super Admin, you can configure the GitHub token for testing. 
+          For production, set the <code>GITHUB_TOKEN</code> environment variable in Netlify.
+        </p>
+        <ol class="setup-steps">
+          <li>Visit <a href="https://github.com/settings/tokens" target="_blank">GitHub Settings → Tokens</a></li>
+          <li>Click "Generate new token (classic)"</li>
+          <li>Select scopes: <code>repo</code></li>
+          <li>Copy the token (starts with <code>ghp_</code>)</li>
+          <li>Paste it below and click Save</li>
+        </ol>
+        <div class="info-note">
+          <strong>💡 For Production:</strong> Set <code>GITHUB_TOKEN</code> in Netlify environment variables 
+          so all users can access AI features without manual configuration.
+        </div>
+      </div>
+
+      <div class="token-input-group">
+        <label for="github-token">GitHub Personal Access Token</label>
+        <input 
+          id="github-token"
+          type="password" 
+          [(ngModel)]="githubToken" 
+          placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
+          class="token-input">
+        
+        <div class="token-actions">
+          <button class="btn-save" (click)="saveGitHubToken()" [disabled]="!githubToken.trim()">
+            💾 Save Token
+          </button>
+          <button class="btn-clear" (click)="clearGitHubToken()" [disabled]="!githubToken.trim()">
+            🗑️ Clear Token
+          </button>
+        </div>
+      </div>
+
+      <div class="token-status" *ngIf="githubToken.trim()">
+        <span class="status-indicator">✅</span>
+        <span>Token configured - AI features enabled</span>
+      </div>
+      <div class="token-status warning" *ngIf="!githubToken.trim()">
+        <span class="status-indicator">⚠️</span>
+        <span>No token configured - AI features disabled</span>
+      </div>
     </div>
   </div>
 

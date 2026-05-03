@@ -20,18 +20,32 @@ export class AIService {
   }
 
   private restoreAPIKey() {
-    // Check environment config first, fallback to localStorage
+    // Priority order:
+    // 1. Environment config (for development and Netlify env vars)
+    // 2. localStorage (for admin-configured tokens)
+    
     const env = environment as any;
+    
+    // Check if running on Netlify (environment variables available)
     if (env.ai) {
       if (env.ai.provider === 'github' && env.ai.github?.token) {
         this.apiKey = env.ai.github.token;
+        console.log('AI: Using GitHub token from environment config');
+        return;
       } else if (env.ai.provider === 'claude' && env.ai.claude?.apiKey) {
         this.apiKey = env.ai.claude.apiKey;
+        console.log('AI: Using Claude API key from environment config');
+        return;
       }
     }
-    // Fallback to localStorage
-    if (!this.apiKey) {
-      this.apiKey = localStorage.getItem('piq_ai_key') || '';
+    
+    // Fallback to localStorage (admin-configured)
+    const storedKey = localStorage.getItem('piq_ai_key');
+    if (storedKey) {
+      this.apiKey = storedKey;
+      console.log('AI: Using token from localStorage (admin configured)');
+    } else {
+      console.warn('AI: No API key configured. Please configure via Settings or environment variables.');
     }
   }
 
@@ -98,6 +112,13 @@ Only return the JSON array, no other text.`;
     } catch {
       return [];
     }
+  }
+
+  /**
+   * Public method for chatbot conversations
+   */
+  async chat(userMessage: string): Promise<string> {
+    return this.callClaude(userMessage);
   }
 
   private async callClaude(prompt: string): Promise<string> {

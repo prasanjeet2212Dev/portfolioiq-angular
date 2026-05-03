@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AIService } from '../../services/claude-ai.service';
+import { AIService } from '../../services/ai.service';
 import { ToastService } from '../toast/toast.service';
 import { DatabaseService } from '../../services/database.service';
 
@@ -224,7 +224,7 @@ Provide a helpful, concise response (2-3 sentences). Be friendly and professiona
 
       // Call AI service
       const startTime = Date.now();
-      const response = await this.aiService['callGitHubModels'](contextPrompt);
+      const response = await this.aiService.chat(contextPrompt);
       const responseTime = Date.now() - startTime;
       
       // Save assistant response to database (if session exists)

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SupabaseService } from '../../services/supabase.service';
 import { ScoringService } from '../../services/scoring.service';
-import { AIService } from '../../services/claude-ai.service';
+import { AIService } from '../../services/ai.service';
 import { ExportService } from '../../services/export.service';
 import { ToastService } from '../../shared/toast/toast.service';
 import { Startup, Insight } from '../../models';
