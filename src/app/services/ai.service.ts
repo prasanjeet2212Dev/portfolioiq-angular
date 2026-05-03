@@ -152,10 +152,6 @@ Only return the JSON array, no other text.`;
       'content-type': 'application/json'
     };
 
-    if (this.apiKey) {
-      headers['x-api-key'] = this.apiKey;
-    }
-
     const response = await fetch('/api/claude', {
       method: 'POST',
       headers,

@@ -18,8 +18,6 @@ export class StartupDetailComponent implements OnInit {
   scores = { ir_score: 0, mp_score: 0, overall_score: 0 };
   loadingAI = false;
   aiTab = 'analysis';
-  showSettings = false;
-  apiKey = '';
   Math = Math;
   parseFloat = parseFloat;
 
@@ -174,13 +172,6 @@ export class StartupDetailComponent implements OnInit {
     } catch (err) {
       console.error('Error saving insight:', err);
       this.toast.error('Error saving insight: ' + (err as any).message);
-    }
-  }
-
-  setAPIKey() {
-    if (this.apiKey) {
-      this.ai.setAPIKey(this.apiKey);
-      this.showSettings = false;
     }
   }
 

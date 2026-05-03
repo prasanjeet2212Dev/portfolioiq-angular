@@ -1,60 +1,6 @@
 <div class="admin-page">
   <div class="page-header">
     <div class="page-title">Super Admin</div>
-    <button class="btn-settings" (click)="toggleSettings()">⚙️ AI Settings</button>
-  </div>
-
-  <!-- Settings Panel -->
-  <div class="settings-panel" *ngIf="showSettings">
-    <div class="settings-header">
-      <h3>🤖 AI Configuration</h3>
-      <button class="btn-close" (click)="toggleSettings()">×</button>
-    </div>
-    
-    <div class="settings-body">
-      <div class="settings-info">
-        <p><strong>GitHub Models API Token</strong></p>
-        <p class="info-text">
-          Portfolio IQ uses GitHub Models (powered by Azure OpenAI) for AI features. 
-          To enable AI-powered analysis, valuation, and chatbot:
-        </p>
-        <ol class="setup-steps">
-          <li>Visit <a href="https://github.com/settings/tokens" target="_blank">GitHub Settings → Tokens</a></li>
-          <li>Click "Generate new token (classic)"</li>
-          <li>Select scopes: <code>repo</code> and <code>read:org</code></li>
-          <li>Copy the token (starts with <code>ghp_</code>)</li>
-          <li>Paste it below and click Save</li>
-        </ol>
-      </div>
-
-      <div class="token-input-group">
-        <label for="github-token">GitHub Personal Access Token</label>
-        <input 
-          id="github-token"
-          type="password" 
-          [(ngModel)]="githubToken" 
-          placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
-          class="token-input">
-        
-        <div class="token-actions">
-          <button class="btn-save" (click)="saveGitHubToken()" [disabled]="!githubToken.trim()">
-            💾 Save Token
-          </button>
-          <button class="btn-clear" (click)="clearGitHubToken()" [disabled]="!githubToken.trim()">
-            🗑️ Clear Token
-          </button>
-        </div>
-      </div>
-
-      <div class="token-status" *ngIf="githubToken.trim()">
-        <span class="status-indicator">✅</span>
-        <span>Token configured - AI features enabled</span>
-      </div>
-      <div class="token-status warning" *ngIf="!githubToken.trim()">
-        <span class="status-indicator">⚠️</span>
-        <span>No token configured - AI features disabled</span>
-      </div>
-    </div>
   </div>
 
   <div class="kpi-grid">
