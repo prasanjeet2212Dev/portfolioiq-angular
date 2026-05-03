@@ -533,6 +533,31 @@
   text-decoration: underline;
 }
 
+.info-note {
+  margin-top: var(--spacing-lg);
+  padding: var(--spacing-md);
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #856404;
+}
+
+.info-note strong {
+  display: block;
+  margin-bottom: var(--spacing-xs);
+  color: #856404;
+}
+
+.info-note code {
+  background: rgba(255, 193, 7, 0.2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #856404;
+}
+
 .token-input-group {
   margin-bottom: var(--spacing-xl);
 }

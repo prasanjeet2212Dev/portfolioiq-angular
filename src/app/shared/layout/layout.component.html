@@ -60,8 +60,8 @@
       </a>
     </nav>
 
-    <div class="sidebar-section-label">SYSTEM</div>
-    <nav class="sidebar-nav">
+    <div class="sidebar-section-label" *ngIf="isSuperAdmin">SYSTEM</div>
+    <nav class="sidebar-nav" *ngIf="isSuperAdmin">
       <a class="nav-item" (click)="toggleSettings()" style="cursor: pointer;">
         <span class="nav-icon">⚙</span>
         <span class="nav-label">AI Settings</span>
@@ -98,11 +98,11 @@
     </div>
   </div>
 
-  <!-- Settings Panel -->
-  <div class="settings-overlay" *ngIf="showSettings" (click)="showSettings = false"></div>
-  <div class="settings-panel" [class.active]="showSettings">
+  <!-- Settings Panel (Super Admin Only) -->
+  <div class="settings-overlay" *ngIf="showSettings && isSuperAdmin" (click)="showSettings = false"></div>
+  <div class="settings-panel" [class.active]="showSettings && isSuperAdmin">
     <div class="settings-header">
-      <h3>🤖 AI Configuration</h3>
+      <h3>🤖 AI Configuration (Super Admin)</h3>
       <button class="btn-close" (click)="toggleSettings()">×</button>
     </div>
     
@@ -110,8 +110,8 @@
       <div class="settings-info">
         <p><strong>GitHub Models API Token</strong></p>
         <p class="info-text">
-          Portfolio IQ uses GitHub Models (powered by Azure OpenAI) for AI features. 
-          To enable AI-powered analysis, valuation, and chatbot:
+          As Super Admin, you can configure the GitHub token for testing. 
+          For production, set the <code>GITHUB_TOKEN</code> environment variable in Netlify.
         </p>
         <ol class="setup-steps">
           <li>Visit <a href="https://github.com/settings/tokens" target="_blank">GitHub Settings → Tokens</a></li>
@@ -120,6 +120,10 @@
           <li>Copy the token (starts with <code>ghp_</code>)</li>
           <li>Paste it below and click Save</li>
         </ol>
+        <div class="info-note">
+          <strong>💡 For Production:</strong> Set <code>GITHUB_TOKEN</code> in Netlify environment variables 
+          so all users can access AI features without manual configuration.
+        </div>
       </div>
 
       <div class="token-input-group">
