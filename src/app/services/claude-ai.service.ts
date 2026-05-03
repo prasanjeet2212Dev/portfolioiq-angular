@@ -100,6 +100,13 @@ Only return the JSON array, no other text.`;
     }
   }
 
+  /**
+   * Public method for chatbot conversations
+   */
+  async chat(userMessage: string): Promise<string> {
+    return this.callClaude(userMessage);
+  }
+
   private async callClaude(prompt: string): Promise<string> {
     if (this.provider === 'github') {
       return this.callGitHubModels(prompt);
