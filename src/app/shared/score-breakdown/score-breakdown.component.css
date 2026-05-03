@@ -1,0 +1,125 @@
+.score-breakdown {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid #e0e0e0;
+}
+
+.breakdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.breakdown-header h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2d2d2d;
+  margin: 0;
+}
+
+.total-score {
+  font-size: 24px;
+  font-weight: 700;
+  color: #667eea;
+}
+
+.factors-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.factor-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.factor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.factor-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #2d2d2d;
+}
+
+.factor-score {
+  font-size: 13px;
+  font-weight: 600;
+  color: #666;
+}
+
+.factor-bar {
+  height: 8px;
+  background: #f0f0f0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.factor-fill {
+  height: 100%;
+  transition: width 0.3s ease;
+  border-radius: 4px;
+}
+
+.fill-high {
+  background: linear-gradient(90deg, #10b981, #059669);
+}
+
+.fill-medium {
+  background: linear-gradient(90deg, #f59e0b, #d97706);
+}
+
+.fill-low {
+  background: linear-gradient(90deg, #ff6b6b, #dc2626);
+}
+
+.factor-value {
+  font-size: 12px;
+  color: #999;
+  font-style: italic;
+}
+
+.breakdown-footer {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.help-text {
+  font-size: 12px;
+  color: #666;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.help-text strong {
+  color: #2d2d2d;
+}
+
+@media (max-width: 768px) {
+  .score-breakdown {
+    padding: 16px;
+  }
+
+  .breakdown-header h4 {
+    font-size: 14px;
+  }
+
+  .total-score {
+    font-size: 20px;
+  }
+
+  .factor-label,
+  .factor-score {
+    font-size: 12px;
+  }
+}

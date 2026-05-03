@@ -1,0 +1,292 @@
+<div class="landing-page">
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1 class="hero-title">
+          AI-Powered Intelligence for the
+          <span class="gradient-text">Indian Startup Ecosystem</span>
+        </h1>
+        <p class="hero-subtitle">
+          Portfolio IQ is an information powerhouse that saves time, effort, and cost with comprehensive,
+          AI-driven insights across Startups, Incubators, Investors, Government Schemes, and Market Intelligence.
+        </p>
+        <div class="hero-actions">
+          <button class="btn-primary-large" (click)="navigateToAuth()">
+            SIGN-UP FOR FREE
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Animated Stats Ticker (like YNOS) -->
+  <div class="stats-ticker">
+    <div class="ticker-track">
+      <div class="ticker-item" *ngFor="let stat of tickerStats">
+        <span class="ticker-value">{{ stat.value }}</span>
+        <span class="ticker-label">{{ stat.label }}</span>
+        <span class="ticker-highlight">{{ stat.highlight }}</span>
+      </div>
+      <!-- Duplicate for seamless loop -->
+      <div class="ticker-item" *ngFor="let stat of tickerStats">
+        <span class="ticker-value">{{ stat.value }}</span>
+        <span class="ticker-label">{{ stat.label }}</span>
+        <span class="ticker-highlight">{{ stat.highlight }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Search Section (like YNOS) -->
+  <section class="search-section">
+    <div class="container">
+      <div class="search-header">
+        <h2 class="search-title">EXPLORE THE PLATFORM</h2>
+        <h3 class="search-subtitle">Search for anything on Portfolio IQ</h3>
+      </div>
+      <div class="search-tabs">
+        <button 
+          *ngFor="let category of searchCategories" 
+          class="search-tab"
+          [class.active]="category.active"
+          (click)="selectCategory(category.id)">
+          {{ category.label }}
+        </button>
+      </div>
+      <div class="search-box">
+        <input 
+          type="text" 
+          [(ngModel)]="searchQuery"
+          class="search-input" 
+          placeholder="Search {{ activeCategory === 'startups' ? 'Startups (Eg. Ather Energy)' : activeCategory === 'incubators' ? 'Incubators (Eg. T-Hub)' : activeCategory === 'investors' ? 'Investors (Eg. Sequoia)' : 'Government Schemes' }}"
+          (keyup.enter)="performSearch()">
+        <button class="search-button" (click)="performSearch()">
+          SEARCH
+        </button>
+      </div>
+      <div class="search-note">
+        Sign up to explore our full database of startups, scores, and insights
+      </div>
+    </div>
+  </section>
+
+  <!-- Mission Statement Section -->
+  <section class="mission-section">
+    <div class="container">
+      <div class="mission-content">
+        <div class="mission-badge">
+          <span class="badge-icon">💡</span>
+          <span class="badge-text">Our Mission</span>
+        </div>
+        <h2 class="mission-title">
+          Democratizing Startup Intelligence for the Indian Ecosystem
+        </h2>
+        <p class="mission-description">
+          Born from 6+ years of real-world experience in India's startup ecosystem, Portfolio IQ addresses 
+          the critical gap in portfolio management tools. We combine deep domain expertise with cutting-edge 
+          AI to deliver actionable insights that save time, reduce risk, and drive better investment decisions.
+        </p>
+        <div class="mission-highlights">
+          <div class="highlight-item">
+            <div class="highlight-number">6+</div>
+            <div class="highlight-label">Years Ecosystem Experience</div>
+          </div>
+          <div class="highlight-item">
+            <div class="highlight-number">100%</div>
+            <div class="highlight-label">Free to Start</div>
+          </div>
+          <div class="highlight-item">
+            <div class="highlight-number">AI</div>
+            <div class="highlight-label">Powered Insights</div>
+          </div>
+          <div class="highlight-item">
+            <div class="highlight-number">24/7</div>
+            <div class="highlight-label">Real-time Analytics</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="section features-section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Powerful Features for Portfolio Management</h2>
+        <p>Everything you need to manage and grow your startup portfolio</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card" *ngFor="let feature of features">
+          <div class="feature-icon">{{ feature.icon }}</div>
+          <h3 class="feature-title">{{ feature.title }}</h3>
+          <p class="feature-description">{{ feature.description }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Use Cases Section -->
+  <section class="section use-cases-section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Built for Every Stakeholder</h2>
+        <p>Tailored solutions for different ecosystem players</p>
+      </div>
+      <div class="use-cases-grid">
+        <div class="use-case-card" *ngFor="let useCase of useCases">
+          <h3 class="use-case-title">{{ useCase.title }}</h3>
+          <p class="use-case-description">{{ useCase.description }}</p>
+          <ul class="benefits-list">
+            <li *ngFor="let benefit of useCase.benefits">
+              <span class="check-icon">✓</span>
+              {{ benefit }}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Founder Section -->
+  <section class="section founder-section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Built by Ecosystem Veterans</h2>
+        <p>Deep expertise from years of building and supporting startups</p>
+      </div>
+      <div class="founder-content">
+        <div class="founder-card">
+          <div class="founder-image">
+            <div class="founder-avatar">
+              <span class="avatar-initials">PS</span>
+            </div>
+            <a href="https://in.linkedin.com/in/prasanjeet-sinha-117214b8" target="_blank" class="linkedin-badge">
+              <span class="linkedin-icon">in</span>
+            </a>
+          </div>
+          <div class="founder-info">
+            <h3 class="founder-name">Prasanjeet Sinha</h3>
+            <p class="founder-title">Founder & Chief Product Officer</p>
+            <div class="founder-stats">
+              <div class="stat-chip">
+                <span class="stat-icon">🚀</span>
+                <span class="stat-text">6+ Years in Startup Ecosystem</span>
+              </div>
+              <div class="stat-chip">
+                <span class="stat-icon">💡</span>
+                <span class="stat-text">Portfolio Management Expert</span>
+              </div>
+              <div class="stat-chip">
+                <span class="stat-icon">🎯</span>
+                <span class="stat-text">AI & Analytics Specialist</span>
+              </div>
+            </div>
+            <p class="founder-bio">
+              With over 6 years of hands-on experience in the startup building ecosystem, Prasanjeet has worked 
+              closely with incubators, investors, and founders across India. His deep understanding of portfolio 
+              management challenges and AI-driven solutions led to the creation of Portfolio IQ—a platform designed 
+              to empower ecosystem players with intelligent, data-driven insights.
+            </p>
+            <div class="founder-expertise">
+              <h4 class="expertise-title">Core Expertise</h4>
+              <div class="expertise-tags">
+                <span class="tag">Startup Evaluation</span>
+                <span class="tag">Portfolio Analytics</span>
+                <span class="tag">AI/ML Integration</span>
+                <span class="tag">Ecosystem Strategy</span>
+                <span class="tag">Product Development</span>
+                <span class="tag">Data Science</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="section testimonials-section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Trusted by Innovation Leaders</h2>
+        <p>See what our users say about Portfolio IQ</p>
+      </div>
+      <div class="testimonials-grid">
+        <div class="testimonial-card" *ngFor="let testimonial of testimonials">
+          <div class="quote-icon">"</div>
+          <p class="testimonial-quote">{{ testimonial.quote }}</p>
+          <div class="testimonial-author">
+            <div class="author-name">{{ testimonial.author }}</div>
+            <div class="author-org">{{ testimonial.organization }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="section cta-section">
+    <div class="container">
+      <div class="cta-content">
+        <h2 class="cta-title">Ready to Transform Your Portfolio Management?</h2>
+        <p class="cta-subtitle">Join forward-thinking incubators using AI-powered insights</p>
+        <button class="btn-cta" (click)="navigateToAuth()">
+          Start Your Free Account
+        </button>
+        <p class="cta-note">No credit card required • 100% free to start • AI-powered insights</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <span class="logo-piq">Portfolio</span><span class="logo-suffix">IQ</span>
+          </div>
+          <p class="footer-tagline">AI-Powered Portfolio Intelligence</p>
+          <p class="footer-description">
+            Built by ecosystem veterans with 6+ years of experience in the Indian startup landscape.
+            Empowering incubators, investors, and founders with intelligent insights.
+          </p>
+          <div class="footer-social">
+            <a href="https://in.linkedin.com/in/prasanjeet-sinha-117214b8" target="_blank" class="social-link" title="Connect with Founder">
+              <span class="social-icon">in</span>
+            </a>
+          </div>
+        </div>
+        <div class="footer-links">
+          <div class="footer-column">
+            <h4>Product</h4>
+            <a (click)="scrollToSection('features')">Features</a>
+            <a (click)="navigateToAuth()">Get Started</a>
+            <a (click)="navigateToAuth()">Dashboard</a>
+            <a href="#">Pricing</a>
+          </div>
+          <div class="footer-column">
+            <h4>Company</h4>
+            <a href="#">About Us</a>
+            <a href="#">Team</a>
+            <a href="#">Contact</a>
+            <a href="#">Careers</a>
+          </div>
+          <div class="footer-column">
+            <h4>Resources</h4>
+            <a href="#">Documentation</a>
+            <a href="#">API</a>
+            <a href="#">Support</a>
+            <a href="#">Privacy Policy</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Portfolio IQ. Built for the Indian Startup Ecosystem by <a href="https://in.linkedin.com/in/prasanjeet-sinha-117214b8" target="_blank" class="founder-link">Prasanjeet Sinha</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- AI Chatbot -->
+  <app-chatbot></app-chatbot>
+</div>

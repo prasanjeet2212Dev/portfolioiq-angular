@@ -1,0 +1,43 @@
+<div class="score-breakdown">
+  <div class="breakdown-header">
+    <h4>{{ scoreType === 'ir' ? 'Investment Readiness' : 'Market Potential' }} Breakdown</h4>
+    <div class="total-score">{{ getTotalScore() }}/{{ getTotalMaxPoints() }}</div>
+  </div>
+
+  <div class="factors-list">
+    <div class="factor-item" *ngFor="let factor of getFactors()">
+      <div class="factor-header">
+        <span class="factor-label">{{ factor.label }}</span>
+        <span class="factor-score">{{ factor.points }}/{{ factor.maxPoints }}</span>
+      </div>
+      <div class="factor-bar">
+        <div class="factor-fill" [style.width.%]="getPercentage(factor)"
+             [ngClass]="{
+               'fill-high': getPercentage(factor) >= 70,
+               'fill-medium': getPercentage(factor) >= 40 && getPercentage(factor) < 70,
+               'fill-low': getPercentage(factor) < 40
+             }">
+        </div>
+      </div>
+      <div class="factor-value" *ngIf="factor.value > 0">
+        <span *ngIf="factor.label.includes('Revenue')">₹{{ formatNumber(factor.value) }}</span>
+        <span *ngIf="factor.label.includes('Growth') || factor.label.includes('Market Growth')">{{ factor.value.toFixed(1) }}%</span>
+        <span *ngIf="factor.label.includes('Runway')">{{ factor.value}} months</span>
+        <span *ngIf="factor.label.includes('Team')">{{ factor.value }} members</span>
+        <span *ngIf="factor.label.includes('Ratio')">{{ factor.value.toFixed(2) }}</span>
+        <span *ngIf="factor.label.includes('TAM')">₹{{ formatNumber(factor.value) }}</span>
+        <span *ngIf="factor.label.includes('Traction')">{{ formatNumber(factor.value) }} customers</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="breakdown-footer">
+    <p class="help-text">
+      <strong>How is this calculated?</strong> 
+      {{ scoreType === 'ir' 
+        ? 'Investment Readiness score considers revenue, runway, growth, team, funding stage, and unit economics.' 
+        : 'Market Potential score evaluates TAM size, market growth rate, competitive advantages, and customer traction.'
+      }}
+    </p>
+  </div>
+</div>

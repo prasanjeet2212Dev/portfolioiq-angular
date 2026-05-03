@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { SupabaseService } from '../../services/supabase.service';
+import { ToastService } from '../../shared/toast/toast.service';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
@@ -81,7 +82,8 @@ export class AddStartupComponent {
 
   constructor(
     private supabase: SupabaseService,
-    private router: Router
+    private router: Router,
+    private toast: ToastService
   ) {}
 
   toggleSection(section: keyof typeof this.sections) {
@@ -175,6 +177,7 @@ export class AddStartupComponent {
       this.name = '';
       this.whatTheyDo = '';
       this.sector = '';
+      this.toast.info('Form reset successfully');
       // Reset other fields as needed
     }
   }

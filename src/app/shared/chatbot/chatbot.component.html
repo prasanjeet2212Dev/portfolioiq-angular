@@ -1,0 +1,150 @@
+<!-- Floating Chat Button -->
+<div class="chatbot-container">
+  <button 
+    *ngIf="!isOpen" 
+    class="chatbot-button" 
+    (click)="toggleChat()"
+    title="Chat with Portfolio IQ Assistant">
+    <span class="chatbot-icon">💬</span>
+    <span class="chatbot-badge">AI</span>
+  </button>
+
+  <!-- Chat Window -->
+  <div class="chat-window" *ngIf="isOpen" [class.minimized]="isMinimized">
+    <!-- Chat Header -->
+    <div class="chat-header">
+      <div class="chat-header-content">
+        <div class="chat-avatar">
+          <span class="avatar-icon">🤖</span>
+        </div>
+        <div class="chat-title">
+          <h4>Portfolio IQ Assistant</h4>
+          <span class="chat-status">
+            <span class="status-dot"></span>
+            Assisting founders, investors, and incubators
+          </span>
+        </div>
+      </div>
+      <div class="chat-actions">
+        <button class="action-btn" (click)="minimizeChat()" *ngIf="!showAuthForm" title="Minimize">
+          <span *ngIf="!isMinimized">−</span>
+          <span *ngIf="isMinimized">□</span>
+        </button>
+        <button class="action-btn" (click)="closeChat()" title="Close">×</button>
+      </div>
+    </div>
+
+    <!-- Auth Form (for non-authenticated users) -->
+    <div class="auth-form" *ngIf="showAuthForm && !isAuthenticated && !isMinimized">
+      <div class="auth-message">
+        <p class="auth-title">Welcome to Portfolio IQ! 👋</p>
+        <p class="auth-subtitle">To use our AI Assistant, please provide your details or login to your account.</p>
+      </div>
+      
+      <div class="form-group">
+        <input 
+          type="text" 
+          class="form-input" 
+          [(ngModel)]="guestUser.name"
+          placeholder="Please enter your Name (required)"
+          required>
+      </div>
+      
+      <div class="form-group">
+        <input 
+          type="email" 
+          class="form-input" 
+          [(ngModel)]="guestUser.email"
+          placeholder="Enter your Email address (required)"
+          required>
+      </div>
+      
+      <div class="form-group">
+        <input 
+          type="tel" 
+          class="form-input" 
+          [(ngModel)]="guestUser.phone"
+          placeholder="Enter your phone number (required)"
+          required>
+      </div>
+      
+      <div class="auth-actions">
+        <button class="btn-cancel" (click)="cancelRegistration()">Cancel</button>
+        <button class="btn-continue" (click)="submitGuestRegistration()">Continue</button>
+      </div>
+      
+      <div class="auth-divider">
+        <span>OR</span>
+      </div>
+      
+      <button class="btn-login" (click)="navigateToLogin()">
+        <span class="login-icon">🔐</span>
+        Login to Existing Account
+      </button>
+    </div>
+
+    <!-- Chat Body (for authenticated users) -->
+    <div class="chat-body" *ngIf="!isMinimized && isAuthenticated && !showAuthForm">
+      <!-- Messages -->
+      <div class="chat-messages">
+        <div 
+          *ngFor="let message of messages" 
+          class="message" 
+          [class.user-message]="message.role === 'user'"
+          [class.assistant-message]="message.role === 'assistant'">
+          <div class="message-content">
+            <div class="message-text">{{ message.content }}</div>
+            <div class="message-time">{{ message.timestamp | date:'short' }}</div>
+          </div>
+        </div>
+
+        <!-- Loading indicator -->
+        <div *ngIf="isLoading" class="message assistant-message">
+          <div class="message-content">
+            <div class="typing-indicator">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Questions -->
+      <div class="quick-questions" *ngIf="messages.length <= 1">
+        <div class="quick-question-label">Quick questions:</div>
+        <div class="quick-question-buttons">
+          <button 
+            *ngFor="let question of quickQuestions" 
+            class="quick-question-btn"
+            (click)="selectQuickQuestion(question)">
+            {{ question }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Input Area -->
+      <div class="chat-input-area">
+        <div class="input-group">
+          <input 
+            type="text" 
+            class="chat-input" 
+            [(ngModel)]="userInput"
+            (keyup.enter)="sendMessage()"
+            placeholder="Ask me anything about Portfolio IQ..."
+            [disabled]="isLoading">
+          <button 
+            class="send-button" 
+            (click)="sendMessage()"
+            [disabled]="!userInput.trim() || isLoading">
+            <span class="send-icon">➤</span>
+          </button>
+        </div>
+        <div class="chat-footer">
+          <button class="clear-btn" (click)="clearChat()">Clear Chat</button>
+          <span class="powered-by">Powered by AI</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

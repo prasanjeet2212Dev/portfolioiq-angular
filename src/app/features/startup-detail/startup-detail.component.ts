@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SupabaseService } from '../../services/supabase.service';
 import { ScoringService } from '../../services/scoring.service';
-import { ClaudeAIService } from '../../services/claude-ai.service';
+import { AIService } from '../../services/claude-ai.service';
+import { ExportService } from '../../services/export.service';
+import { ToastService } from '../../shared/toast/toast.service';
 import { Startup, Insight } from '../../models';
 
 @Component({
@@ -26,8 +28,9 @@ export class StartupDetailComponent implements OnInit {
     private router: Router,
     private supabase: SupabaseService,
     private scoring: ScoringService,
-    private claude: ClaudeAIService,
-    private ai: ClaudeAIService
+    private ai: AIService,
+    private exportService: ExportService,
+    private toast: ToastService
   ) {}
 
   ngOnInit() {
@@ -68,10 +71,11 @@ export class StartupDetailComponent implements OnInit {
     if (!this.startup) return;
     this.loadingAI = true;
     try {
-      const analysis = await this.claude.analyzeStartup(this.startup);
+      const analysis = await this.ai.analyzeStartup(this.startup);
       this.saveInsight({ analysis });
+      this.toast.success('Analysis generated successfully');
     } catch (err: any) {
-      alert('Error: ' + (err.message || 'Failed to generate analysis'));
+      this.toast.error(err.message || 'Failed to generate analysis');
     } finally {
       this.loadingAI = false;
     }
@@ -81,10 +85,11 @@ export class StartupDetailComponent implements OnInit {
     if (!this.startup) return;
     this.loadingAI = true;
     try {
-      const market_intel = await this.claude.generateMarketIntel(this.startup);
+      const market_intel = await this.ai.generateMarketIntel(this.startup);
       this.saveInsight({ market_intel });
+      this.toast.success('Market intelligence generated successfully');
     } catch (err: any) {
-      alert('Error: ' + (err.message || 'Failed to generate market intel'));
+      this.toast.error(err.message || 'Failed to generate market intel');
     } finally {
       this.loadingAI = false;
     }
@@ -94,10 +99,11 @@ export class StartupDetailComponent implements OnInit {
     if (!this.startup) return;
     this.loadingAI = true;
     try {
-      const action_plan = await this.claude.generateActionPlan(this.startup);
+      const action_plan = await this.ai.generateActionPlan(this.startup);
       this.saveInsight({ action_plan });
+      this.toast.success('Action plan generated successfully');
     } catch (err: any) {
-      alert('Error: ' + (err.message || 'Failed to generate action plan'));
+      this.toast.error(err.message || 'Failed to generate action plan');
     } finally {
       this.loadingAI = false;
     }
@@ -107,10 +113,11 @@ export class StartupDetailComponent implements OnInit {
     if (!this.startup) return;
     this.loadingAI = true;
     try {
-      const valuation = await this.claude.estimateValuation(this.startup);
+      const valuation = await this.ai.estimateValuation(this.startup);
       this.saveInsight({ valuation });
+      this.toast.success('Valuation estimate generated successfully');
     } catch (err: any) {
-      alert('Error: ' + (err.message || 'Failed to estimate valuation'));
+      this.toast.error(err.message || 'Failed to estimate valuation');
     } finally {
       this.loadingAI = false;
     }
@@ -120,10 +127,11 @@ export class StartupDetailComponent implements OnInit {
     if (!this.startup) return;
     this.loadingAI = true;
     try {
-      const schemes = await this.claude.matchGovernmentSchemes(this.startup);
+      const schemes = await this.ai.matchGovernmentSchemes(this.startup);
       this.saveInsight({ schemes });
+      this.toast.success(`Matched ${schemes.length} government schemes`);
     } catch (err: any) {
-      alert('Error: ' + (err.message || 'Failed to match schemes'));
+      this.toast.error(err.message || 'Failed to match schemes');
     } finally {
       this.loadingAI = false;
     }
@@ -131,8 +139,24 @@ export class StartupDetailComponent implements OnInit {
 
   private async saveInsight(data: any) {
     if (!this.startup) return;
-    const institution = await this.supabase.getCurrentInstitution().toPromise();
-    if (!institution) return;
+    
+    // For super admin, use startup's institution_id
+    let institutionId: number;
+    const isSuperAdmin = this.supabase.getSuperAdminStatus();
+    
+    if (isSuperAdmin) {
+      institutionId = this.startup.institution_id;
+      console.log('Super admin - using startup institution_id:', institutionId);
+    } else {
+      const institution = await this.supabase.getCurrentInstitution().toPromise();
+      if (!institution) {
+        console.error('No institution found for regular user');
+        this.toast.error('Unable to save insight - no institution found');
+        return;
+      }
+      institutionId = institution.id;
+    }
+    
     const updated = {
       ...this.insight?.data,
       ...data,
@@ -140,13 +164,22 @@ export class StartupDetailComponent implements OnInit {
       mp_score: this.scores.mp_score,
       overall_score: this.scores.overall_score
     };
-    const insight = await this.supabase.saveInsight(this.startup.id, institution.id, updated);
-    this.insight = insight;
+    
+    console.log('Saving insight for startup:', this.startup.id, 'institution:', institutionId);
+    
+    try {
+      const insight = await this.supabase.saveInsight(this.startup.id, institutionId, updated);
+      this.insight = insight;
+      console.log('Insight saved successfully:', insight);
+    } catch (err) {
+      console.error('Error saving insight:', err);
+      this.toast.error('Error saving insight: ' + (err as any).message);
+    }
   }
 
   setAPIKey() {
     if (this.apiKey) {
-      this.claude.setAPIKey(this.apiKey);
+      this.ai.setAPIKey(this.apiKey);
       this.showSettings = false;
     }
   }
@@ -180,5 +213,11 @@ export class StartupDetailComponent implements OnInit {
     if (!this.startup || !this.startup.data['teamSize']) return 0;
     const teamSize = parseInt(this.startup.data['teamSize'] as any, 10) || 0;
     return Math.min(teamSize * 5, 100);
+  }
+
+  exportReport() {
+    if (this.startup) {
+      this.exportService.exportStartupReport(this.startup);
+    }
   }
 }

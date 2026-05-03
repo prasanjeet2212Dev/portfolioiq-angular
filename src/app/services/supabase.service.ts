@@ -202,14 +202,23 @@ export class SupabaseService {
   async getInsight(startupId: number): Promise<Insight | null> {
     if (!this.sb) throw new Error('Supabase not initialized');
 
-    const { data, error } = await this.sb
-      .from('insights')
-      .select('*')
-      .eq('startup_id', startupId)
-      .single();
+    try {
+      const { data, error } = await this.sb
+        .from('insights')
+        .select('*')
+        .eq('startup_id', startupId)
+        .maybeSingle();
 
-    if (error && error.code !== 'PGRST116') throw error;
-    return (data || null) as Insight | null;
+      if (error) {
+        console.warn('Error fetching insight:', error);
+        return null;
+      }
+      
+      return (data || null) as Insight | null;
+    } catch (err) {
+      console.warn('Exception fetching insight:', err);
+      return null;
+    }
   }
 
   async saveInsight(startupId: number, institutionId: number, insightData: any): Promise<Insight> {

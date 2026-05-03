@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SupabaseService } from '../../services/supabase.service';
+import { ToastService } from '../../shared/toast/toast.service';
 import { Startup } from '../../models';
 
 @Component({
@@ -28,7 +29,10 @@ export class MarketSizingComponent implements OnInit {
 
   result: any = null;
 
-  constructor(private supabase: SupabaseService) {}
+  constructor(
+    private supabase: SupabaseService,
+    private toast: ToastService
+  ) {}
 
   async ngOnInit() {
     // Check if super admin
@@ -71,7 +75,6 @@ export class MarketSizingComponent implements OnInit {
   }
 
   validateWithAI() {
-    // Placeholder AI validation
-    alert('AI validation would run here');
+    this.toast.info('AI validation coming soon - will analyze market size assumptions');
   }
 }

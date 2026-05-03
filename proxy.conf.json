@@ -7,5 +7,17 @@
       "^/api/claude": "/v1/messages"
     },
     "logLevel": "debug"
+  },
+  "/api/github-models": {
+    "target": "https://models.inference.ai.azure.com",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api/github-models": ""
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "logLevel": "debug"
   }
 }
