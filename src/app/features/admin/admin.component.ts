@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SupabaseService } from '../../services/supabase.service';
 import { ScoringService } from '../../services/scoring.service';
 import { ToastService } from '../../shared/toast/toast.service';
-import { AIService } from '../../services/claude-ai.service';
+import { AIService } from '../../services/ai.service';
 import { Institution, Startup } from '../../models';
 
 @Component({

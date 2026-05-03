@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AIService } from '../../services/claude-ai.service';
+import { AIService } from '../../services/ai.service';
 import { ToastService } from '../toast/toast.service';
 import { DatabaseService } from '../../services/database.service';
 
