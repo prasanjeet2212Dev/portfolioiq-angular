@@ -161,15 +161,6 @@ Only return the JSON array, no other text.`;
       body: JSON.stringify(requestBody)
     });
 
-    // Use Netlify Function which has access to GITHUB_TOKEN env var
-    const response = await fetch('/api/github-models', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(requestBody)
-    });
-
     console.log('GitHub Models - Response status:', response.status);
 
     if (!response.ok) {
