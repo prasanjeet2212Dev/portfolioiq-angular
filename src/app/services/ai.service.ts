@@ -134,16 +134,8 @@ Only return the JSON array, no other text.`;
     const model = env.ai?.github?.model || 'gpt-4o';
     
     console.log('GitHub Models - Making request with model:', model);
-    console.log('GitHub Models - Token available:', !!this.apiKey);
+    console.log('GitHub Models - Using Netlify Function (server-side token)');
     
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json'
-    };
-
-    if (this.apiKey) {
-      headers['Authorization'] = `Bearer ${this.apiKey}`;
-    }
-
     const requestBody = {
       messages: [
         {
@@ -160,11 +152,21 @@ Only return the JSON array, no other text.`;
       max_tokens: 1024
     };
 
-    console.log('GitHub Models - Request body:', JSON.stringify(requestBody, null, 2));
-
-    const response = await fetch('/api/github-models/chat/completions', {
+    // Use Netlify Function which has access to GITHUB_TOKEN env var
+    const response = await fetch('/api/github-models', {
       method: 'POST',
-      headers,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(requestBody)
+    });
+
+    // Use Netlify Function which has access to GITHUB_TOKEN env var
+    const response = await fetch('/api/github-models', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify(requestBody)
     });
 
@@ -184,9 +186,7 @@ Only return the JSON array, no other text.`;
     }
 
     const data = await response.json();
-    console.log('GitHub Models - Response data:', data);
     const content = data.choices?.[0]?.message?.content || '';
-    console.log('GitHub Models - Extracted content:', content);
     return content;
   }
 
