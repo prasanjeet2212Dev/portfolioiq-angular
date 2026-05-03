@@ -6,47 +6,11 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class AIService {
-  private apiKey = '';
   private provider: 'claude' | 'github' = 'github';
 
   constructor() {
-    this.restoreAPIKey();
     this.provider = (environment as any).ai?.provider || 'github';
-  }
-
-  setAPIKey(key: string) {
-    this.apiKey = key;
-    localStorage.setItem('piq_ai_key', key);
-  }
-
-  private restoreAPIKey() {
-    // Priority order:
-    // 1. Environment config (for development and Netlify env vars)
-    // 2. localStorage (for admin-configured tokens)
-    
-    const env = environment as any;
-    
-    // Check if running on Netlify (environment variables available)
-    if (env.ai) {
-      if (env.ai.provider === 'github' && env.ai.github?.token) {
-        this.apiKey = env.ai.github.token;
-        console.log('AI: Using GitHub token from environment config');
-        return;
-      } else if (env.ai.provider === 'claude' && env.ai.claude?.apiKey) {
-        this.apiKey = env.ai.claude.apiKey;
-        console.log('AI: Using Claude API key from environment config');
-        return;
-      }
-    }
-    
-    // Fallback to localStorage (admin-configured)
-    const storedKey = localStorage.getItem('piq_ai_key');
-    if (storedKey) {
-      this.apiKey = storedKey;
-      console.log('AI: Using token from localStorage (admin configured)');
-    } else {
-      console.warn('AI: No API key configured. Please configure via Settings or environment variables.');
-    }
+    console.log('AI: Using server-side token via Netlify Function');
   }
 
   async analyzeStartup(startup: Startup): Promise<string> {
